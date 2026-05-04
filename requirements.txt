@@ -1,0 +1,7 @@
+numpy
+pandas
+scikit-learn
+torch
+pyyaml
+# Optional benchmarks (extras): openml lightgbm xgboost tabpfn matplotlib seaborn
+# Optional dev: pytest ruff mypy jupyter

@@ -1,0 +1,20 @@
+[project]
+name = "tabular-state-transformer"
+version = "0.1.0"
+description = "Experimental architecture for non-smooth, interaction-heavy tabular tasks."
+requires-python = ">=3.10"
+dependencies = ["numpy", "scikit-learn", "torch", "pyyaml", "pandas"]
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+benchmarks = ["openml", "lightgbm", "xgboost", "tabpfn", "matplotlib", "seaborn"]
+dev = ["pytest", "ruff", "mypy", "jupyter"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests", "scripts"]

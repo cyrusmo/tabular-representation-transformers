@@ -1,0 +1,11 @@
+model:
+  d_token: 32
+  n_heads: 4
+  n_layers: 1
+  n_experts: 2
+  use_sparse_gate: true
+  use_fourier: true
+training:
+  max_epochs: 5
+  lr: 0.001
+  batch_size: 256

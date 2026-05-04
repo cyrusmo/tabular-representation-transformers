@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+title: Tabular State Transformer
+authors:
+  - family-names: Moazami
+    given-names: Cyrus
+version: 0.1.0
+message: "If you use this experimental toolkit, please cite the repository."

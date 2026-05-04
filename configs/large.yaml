@@ -1,0 +1,12 @@
+model:
+  d_token: 128
+  n_heads: 8
+  n_layers: 4
+  n_experts: 4
+  use_sparse_gate: true
+  use_fourier: true
+  use_wavelet: true
+training:
+  max_epochs: 50
+  lr: 0.0005
+  batch_size: 512

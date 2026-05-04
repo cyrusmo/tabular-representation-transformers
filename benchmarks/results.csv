@@ -1,0 +1,6 @@
+dataset,model,metric,value
+synthetic_threshold,tabular_state_transformer,rmse,TBD
+synthetic_threshold,mlp,rmse,TBD
+synthetic_threshold,random_forest,rmse,TBD
+synthetic_threshold,lightgbm,rmse,TBD
+openml_curated,tabular_state_transformer,mixed,TBD
