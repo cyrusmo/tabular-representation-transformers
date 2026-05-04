@@ -15,8 +15,16 @@ def main() -> None:
     out = Path("benchmarks/results.csv")
     out.parent.mkdir(exist_ok=True)
     with out.open("w", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["dataset", "model", "metric", "value"]); writer.writeheader()
-        writer.writerow({"dataset": "synthetic_threshold", "model": "tabular_state_transformer", "metric": "rmse", "value": rmse})
+        writer = csv.DictWriter(f, fieldnames=["dataset", "model", "metric", "value"])
+        writer.writeheader()
+        writer.writerow(
+            {
+                "dataset": "synthetic_threshold",
+                "model": "tabular_state_transformer",
+                "metric": "rmse",
+                "value": rmse,
+            }
+        )
     print({"rmse": rmse})
 
 if __name__ == "__main__":

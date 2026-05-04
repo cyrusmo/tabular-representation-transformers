@@ -1,0 +1,8 @@
+task: regression
+n_classes: 1
+data_config: configs/data/synthetic.yaml
+model_config: configs/model/tst_v0.yaml
+max_epochs: 5
+batch_size: 128
+learning_rate: 0.001
+output_dir: outputs/regression

@@ -1,0 +1,3 @@
+name: covertype
+source: openml
+split_seed: 42

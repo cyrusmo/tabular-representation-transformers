@@ -1,0 +1,11 @@
+n_features: 20
+d_token: 32
+n_heads: 4
+n_layers: 2
+dropout: 0.1
+use_gate: true
+gate_l1: 0.0001
+use_fourier: true
+use_wavelet: false
+use_moe: false
+head_type: simple

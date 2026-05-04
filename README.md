@@ -10,9 +10,11 @@ tags:
 
 # Tabular State Transformer
 
-An experimental neural architecture/toolkit for non-smooth, interaction-heavy tabular tasks, motivated by the known weaknesses of generic neural models on tabular data.
+Tabular State Transformer is an experimental PyTorch toolkit for tabular prediction tasks where feature identity, sparse interactions, non-smooth boundaries, and regime-like behavior matter.
 
-This project explores whether tabular models can benefit from preserving feature identity, adding sparse feature gates, exposing spectral/wavelet structure, learning feature interactions, and using regime-gated heads.
+This project tests whether preserving feature identity, adding sparse feature gating, and using spectral/interaction blocks can improve neural tabular robustness against strong baselines.
+
+The primary contribution is the ablation harness, not a claim of universal SOTA performance.
 
 ## Intended Use
 
@@ -25,13 +27,20 @@ Do not use this repository as investment advice, a trading model, or a foundatio
 ## Quickstart
 
 ```python
-from tabular_state_transformer.sklearn_api import TabularStateRegressor
-from tabular_state_transformer.data.synthetic import make_threshold_regression
+from tabular_state_transformer.data import load_dataset
+from tabular_state_transformer.config import TabularStateConfig
+from tabular_state_transformer.training import Trainer
 
-X, y = make_threshold_regression(n_samples=2000, n_features=20, random_state=42)
-model = TabularStateRegressor(max_epochs=5, d_token=32)
-model.fit(X, y)
-print(model.predict(X[:5]))
+bundle = load_dataset("synthetic_xor", split_seed=42)
+config = TabularStateConfig(n_features=20, task="classification", max_epochs=2)
+result = Trainer(config).fit(bundle)
+```
+
+```bash
+pip install -e ".[dev,benchmark]"
+python scripts/make_synthetic.py --config configs/data/synthetic.yaml
+python scripts/train.py --config configs/experiment/classification.yaml
+python scripts/run_benchmark.py --suite synthetic
 ```
 
 ## Architecture
@@ -39,16 +48,24 @@ print(model.predict(X[:5]))
 ```text
 Raw tabular features
   -> FeatureTokenizer
-  -> SparseFeatureGate
-  -> Fourier/Wavelet Expansion
+  -> optional SparseFeatureGate
+  -> optional FourierFeatureBlock
   -> InteractionBlock
-  -> RegimeGatedHead
-  -> Classification or Regression head
+  -> ClassificationHead or RegressionHead
 ```
+
+The default configuration is **TST-v0**: no gate, no Fourier block, no MoE, and a simple prediction head. Explicit ablation configs are provided:
+
+- **TST-v0:** `configs/model/tst_v0.yaml`
+- **TST-v1-Gate:** `configs/model/tst_v1_gate.yaml`
+- **TST-v2-GateFourier:** `configs/model/tst_v2_fourier_gate.yaml`
+- **TST-v3-MoE:** `configs/model/tst_v3_moe.yaml`
 
 ## Benchmark Plan
 
-Compare honestly against MLP, random forest, LightGBM/XGBoost, FT-Transformer/TabTransformer, TabPFN where appropriate, and simple linear baselines.
+Compare honestly against linear/ridge models, MLP, random forest, optional LightGBM/XGBoost, and the TST ablations.
+
+Public v1 supports DataFrames with categorical columns via sklearn preprocessing, not native categorical embeddings. The model receives a preprocessed `float32` matrix.
 
 ## Limitations
 
