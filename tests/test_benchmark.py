@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from tabular_state_transformer.evaluation import run_benchmark
+from tabular_state_transformer.evaluation.benchmark import DEFAULT_BASELINES
 
 
 def test_benchmark_script_smoke(tmp_path):
@@ -17,6 +18,12 @@ def test_benchmark_script_smoke(tmp_path):
     assert results
     assert output.exists()
     assert results[0].seed == 42
+    row = results[0].as_row()
+    assert row["status"] == "ok"
+    assert "error_message" in row
+    assert "predict_seconds" in row
+    assert row["n_samples"] == 64
+    assert row["n_features"] == 20
 
 
 def test_benchmark_writes_csv_and_handles_multiple_seeds(tmp_path):
@@ -36,3 +43,11 @@ def test_benchmark_writes_csv_and_handles_multiple_seeds(tmp_path):
     assert [result.seed for result in results] == [42, 43]
     assert output.exists()
     assert csv_output.exists()
+    text = csv_output.read_text()
+    assert "status" in text
+    assert "error_message" in text
+
+
+def test_default_baselines_include_safe_gradient_boosting_not_xgboost():
+    assert "gradient_boosting" in DEFAULT_BASELINES
+    assert "xgboost" not in DEFAULT_BASELINES

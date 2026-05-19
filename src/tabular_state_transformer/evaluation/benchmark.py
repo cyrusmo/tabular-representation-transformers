@@ -23,9 +23,16 @@ class BenchmarkResult:
     seed: int
     task: str
     family: str
+    variant: str
     metric: str
     score: float
     fit_seconds: float
+    predict_seconds: float
+    n_samples: int
+    n_features: int
+    status: str = "ok"
+    error_message: str = ""
+    artifact_path: str = ""
     notes: str = ""
 
     def as_row(self) -> dict[str, object]:
@@ -35,9 +42,16 @@ class BenchmarkResult:
             "seed": self.seed,
             "task": self.task,
             "family": self.family,
+            "variant": self.variant,
+            "status": self.status,
             "metric": self.metric,
             "score": round(self.score, 6),
             "fit_seconds": round(self.fit_seconds, 4),
+            "predict_seconds": round(self.predict_seconds, 4),
+            "n_samples": self.n_samples,
+            "n_features": self.n_features,
+            "artifact_path": self.artifact_path,
+            "error_message": self.error_message,
             "notes": self.notes,
         }
 
@@ -55,11 +69,21 @@ SYNTHETIC_STRESS_DATASETS = [
 BASELINE_CONFIGS = {
     "linear": "Linear/Ridge",
     "random_forest": "Random Forest",
+    "gradient_boosting": "Gradient Boosting",
     "mlp": "MLP",
     "xgboost": "XGBoost",
     "lightgbm": "LightGBM",
     "catboost": "CatBoost",
 }
+
+DEFAULT_BASELINES = [
+    "linear",
+    "random_forest",
+    "gradient_boosting",
+    "mlp",
+    "lightgbm",
+    "catboost",
+]
 
 MODEL_CONFIGS = {
     "TST-v0": "configs/model/tst_v0.yaml",
@@ -93,6 +117,9 @@ def _error_result(
     seed: int,
     task: str,
     family: str,
+    variant: str,
+    n_samples: int,
+    n_features: int,
     error: Exception,
 ) -> BenchmarkResult:
     return BenchmarkResult(
@@ -101,10 +128,15 @@ def _error_result(
         seed=seed,
         task=task,
         family=family,
+        variant=variant,
         metric="error",
         score=float("nan"),
         fit_seconds=0.0,
-        notes=str(error),
+        predict_seconds=0.0,
+        n_samples=n_samples,
+        n_features=n_features,
+        status="error",
+        error_message=str(error),
     )
 
 
@@ -123,7 +155,7 @@ def run_benchmark(
 ) -> list[BenchmarkResult]:
     selected_datasets = list(_datasets_for_suite(suite) if dataset_names is None else dataset_names)
     selected_seeds = list([42] if seeds is None else seeds)
-    selected_baselines = list(BASELINE_CONFIGS if baselines is None else baselines)
+    selected_baselines = list(DEFAULT_BASELINES if baselines is None else baselines)
     selected_models = list(MODEL_CONFIGS if model_configs is None else model_configs)
     results: list[BenchmarkResult] = []
     repo_root = Path(__file__).resolve().parents[3]
@@ -132,6 +164,8 @@ def run_benchmark(
         for dataset_name in selected_datasets:
             load_kwargs = {"n_samples": n_samples} if dataset_name.startswith("synthetic") else {}
             bundle = load_dataset(dataset_name, split_seed=seed, **load_kwargs)
+            total_samples = len(bundle.X_train) + len(bundle.X_val) + len(bundle.X_test)
+            raw_features = bundle.X_train.shape[1]
 
             for baseline_name in selected_baselines:
                 label = BASELINE_CONFIGS[baseline_name]
@@ -145,7 +179,9 @@ def run_benchmark(
                     )
                     estimator.fit(bundle.X_train, bundle.y_train)
                     fit_seconds = perf_counter() - start
+                    start = perf_counter()
                     pred = estimator.predict(bundle.X_test)
+                    predict_seconds = perf_counter() - start
                     metric, score = _metric(bundle.task_type, bundle.y_test, pred)
                     results.append(
                         BenchmarkResult(
@@ -154,9 +190,13 @@ def run_benchmark(
                             seed,
                             bundle.task_type,
                             "baseline",
+                            baseline_name,
                             metric,
                             score,
                             fit_seconds,
+                            predict_seconds,
+                            total_samples,
+                            raw_features,
                         )
                     )
                 except Exception as exc:
@@ -169,6 +209,9 @@ def run_benchmark(
                             seed=seed,
                             task=bundle.task_type,
                             family="baseline",
+                            variant=baseline_name,
+                            n_samples=total_samples,
+                            n_features=raw_features,
                             error=exc,
                         )
                     )
@@ -189,7 +232,9 @@ def run_benchmark(
                     trained = Trainer(config, max_epochs=max_epochs, batch_size=128).fit(bundle)
                     fit_seconds = perf_counter() - start
                     X_test = trained.preprocessor.transform(bundle.X_test).astype("float32")
+                    start = perf_counter()
                     pred = trained.model.predict_numpy(X_test)
+                    predict_seconds = perf_counter() - start
                     metric, score = _metric(bundle.task_type, bundle.y_test, pred)
                     results.append(
                         BenchmarkResult(
@@ -198,9 +243,13 @@ def run_benchmark(
                             seed,
                             bundle.task_type,
                             "ablation",
+                            label,
                             metric,
                             score,
                             fit_seconds,
+                            predict_seconds,
+                            total_samples,
+                            raw_features,
                         )
                     )
                 except Exception as exc:
@@ -213,6 +262,9 @@ def run_benchmark(
                             seed=seed,
                             task=bundle.task_type,
                             family="ablation",
+                            variant=label,
+                            n_samples=total_samples,
+                            n_features=raw_features,
                             error=exc,
                         )
                     )

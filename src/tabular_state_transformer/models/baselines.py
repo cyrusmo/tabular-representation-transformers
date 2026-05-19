@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
+from sklearn.ensemble import (
+    GradientBoostingClassifier,
+    GradientBoostingRegressor,
+    RandomForestClassifier,
+    RandomForestRegressor,
+)
 from sklearn.linear_model import LogisticRegression, Ridge
 from sklearn.neural_network import MLPClassifier, MLPRegressor
 from sklearn.pipeline import Pipeline
@@ -22,6 +27,12 @@ def make_baseline(name: str, task: str, frame, *, random_state: int = 42):
             if task == "classification"
             else RandomForestRegressor(n_estimators=50, random_state=random_state)
         )
+    elif name == "gradient_boosting":
+        estimator = (
+            GradientBoostingClassifier(random_state=random_state)
+            if task == "classification"
+            else GradientBoostingRegressor(random_state=random_state)
+        )
     elif name == "mlp":
         estimator = (
             MLPClassifier(hidden_layer_sizes=(64,), max_iter=100, random_state=random_state)
@@ -34,9 +45,9 @@ def make_baseline(name: str, task: str, frame, *, random_state: int = 42):
         except ImportError as exc:  # pragma: no cover
             raise ImportError("Install xgboost to use this baseline") from exc
         estimator = (
-            XGBClassifier(eval_metric="logloss", random_state=random_state)
+            XGBClassifier(eval_metric="logloss", random_state=random_state, n_jobs=1)
             if task == "classification"
-            else XGBRegressor(random_state=random_state)
+            else XGBRegressor(random_state=random_state, n_jobs=1)
         )
     elif name == "lightgbm":
         try:
@@ -44,9 +55,9 @@ def make_baseline(name: str, task: str, frame, *, random_state: int = 42):
         except ImportError as exc:  # pragma: no cover
             raise ImportError("Install lightgbm to use this baseline") from exc
         estimator = (
-            LGBMClassifier(random_state=random_state)
+            LGBMClassifier(random_state=random_state, n_jobs=1, verbose=-1)
             if task == "classification"
-            else LGBMRegressor(random_state=random_state)
+            else LGBMRegressor(random_state=random_state, n_jobs=1, verbose=-1)
         )
     elif name == "catboost":
         try:
@@ -54,9 +65,17 @@ def make_baseline(name: str, task: str, frame, *, random_state: int = 42):
         except ImportError as exc:  # pragma: no cover
             raise ImportError("Install catboost to use this baseline") from exc
         estimator = (
-            CatBoostClassifier(random_seed=random_state, verbose=False)
+            CatBoostClassifier(
+                random_seed=random_state,
+                verbose=False,
+                allow_writing_files=False,
+            )
             if task == "classification"
-            else CatBoostRegressor(random_seed=random_state, verbose=False)
+            else CatBoostRegressor(
+                random_seed=random_state,
+                verbose=False,
+                allow_writing_files=False,
+            )
         )
     else:
         raise ValueError(f"Unknown baseline '{name}'")

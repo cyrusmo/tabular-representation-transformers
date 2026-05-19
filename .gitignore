@@ -8,6 +8,10 @@ data/cache/
 outputs/
 reports/figures/*
 !reports/figures/.gitkeep
+!reports/figures/feature_gate_heatmap.png
+!reports/figures/representation_shape_diagram.png
+!reports/figures/synthetic_task_topology_grid.png
+!reports/figures/tensor_topology_schematic.png
 reports/tables/*
 !reports/tables/.gitkeep
 .DS_Store
