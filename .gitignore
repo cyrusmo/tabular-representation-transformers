@@ -19,3 +19,13 @@ reports/tables/*
 venv/
 .venv/
 .envrc
+
+# Local ML / experiment artifacts (CatBoost writes this by default)
+catboost_info/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
