@@ -1,5 +1,6 @@
 dataset,model,metric,value
 synthetic_axis_aligned,CatBoost,accuracy,0.996748
+synthetic_axis_aligned,Gradient Boosting,accuracy,0.995122
 synthetic_axis_aligned,LightGBM,accuracy,0.995122
 synthetic_axis_aligned,Linear/Ridge,accuracy,0.952845
 synthetic_axis_aligned,MLP,accuracy,0.934959
@@ -7,44 +8,49 @@ synthetic_axis_aligned,Random Forest,accuracy,0.993496
 synthetic_axis_aligned,TST-v0,accuracy,0.902439
 synthetic_axis_aligned,TST-v1-Gate,accuracy,0.902439
 synthetic_axis_aligned,TST-v2-GateFourier,accuracy,0.902439
-synthetic_axis_aligned,TST-v3-MoE,accuracy,0.904065
+synthetic_axis_aligned,TST-v3-MoE,accuracy,0.902439
 synthetic_irrelevant_noise,CatBoost,accuracy,0.931707
+synthetic_irrelevant_noise,Gradient Boosting,accuracy,0.926829
 synthetic_irrelevant_noise,LightGBM,accuracy,0.933333
-synthetic_irrelevant_noise,Linear/Ridge,accuracy,0.82439
+synthetic_irrelevant_noise,Linear/Ridge,accuracy,0.824390
 synthetic_irrelevant_noise,MLP,accuracy,0.806504
 synthetic_irrelevant_noise,Random Forest,accuracy,0.842276
 synthetic_irrelevant_noise,TST-v0,accuracy,0.510569
 synthetic_irrelevant_noise,TST-v1-Gate,accuracy,0.510569
 synthetic_irrelevant_noise,TST-v2-GateFourier,accuracy,0.510569
-synthetic_irrelevant_noise,TST-v3-MoE,accuracy,0.508943
+synthetic_irrelevant_noise,TST-v3-MoE,accuracy,0.510569
 synthetic_piecewise,CatBoost,rmse,0.171983
-synthetic_piecewise,LightGBM,rmse,0.21706
+synthetic_piecewise,Gradient Boosting,rmse,0.151527
+synthetic_piecewise,LightGBM,rmse,0.217060
 synthetic_piecewise,Linear/Ridge,rmse,0.763202
 synthetic_piecewise,MLP,rmse,0.777311
 synthetic_piecewise,Random Forest,rmse,0.259067
-synthetic_piecewise,TST-v0,rmse,0.827628
-synthetic_piecewise,TST-v1-Gate,rmse,0.827693
-synthetic_piecewise,TST-v2-GateFourier,rmse,0.829508
-synthetic_piecewise,TST-v3-MoE,rmse,0.827063
+synthetic_piecewise,TST-v0,rmse,0.822874
+synthetic_piecewise,TST-v1-Gate,rmse,0.822792
+synthetic_piecewise,TST-v2-GateFourier,rmse,0.823772
+synthetic_piecewise,TST-v3-MoE,rmse,0.824043
 synthetic_regime,CatBoost,rmse,0.195501
+synthetic_regime,Gradient Boosting,rmse,0.300141
 synthetic_regime,LightGBM,rmse,0.257394
 synthetic_regime,Linear/Ridge,rmse,0.486661
 synthetic_regime,MLP,rmse,0.384541
 synthetic_regime,Random Forest,rmse,0.273272
-synthetic_regime,TST-v0,rmse,0.612682
-synthetic_regime,TST-v1-Gate,rmse,0.61472
-synthetic_regime,TST-v2-GateFourier,rmse,0.61843
-synthetic_regime,TST-v3-MoE,rmse,0.584707
+synthetic_regime,TST-v0,rmse,0.617912
+synthetic_regime,TST-v1-Gate,rmse,0.617738
+synthetic_regime,TST-v2-GateFourier,rmse,0.621044
+synthetic_regime,TST-v3-MoE,rmse,0.592495
 synthetic_rotated,CatBoost,accuracy,0.965854
-synthetic_rotated,LightGBM,accuracy,0.95935
+synthetic_rotated,Gradient Boosting,accuracy,0.965854
+synthetic_rotated,LightGBM,accuracy,0.959350
 synthetic_rotated,Linear/Ridge,accuracy,0.970732
 synthetic_rotated,MLP,accuracy,0.946341
 synthetic_rotated,Random Forest,accuracy,0.941463
-synthetic_rotated,TST-v0,accuracy,0.676423
-synthetic_rotated,TST-v1-Gate,accuracy,0.62439
-synthetic_rotated,TST-v2-GateFourier,accuracy,0.62439
-synthetic_rotated,TST-v3-MoE,accuracy,0.82439
+synthetic_rotated,TST-v0,accuracy,0.624390
+synthetic_rotated,TST-v1-Gate,accuracy,0.624390
+synthetic_rotated,TST-v2-GateFourier,accuracy,0.624390
+synthetic_rotated,TST-v3-MoE,accuracy,0.624390
 synthetic_sparse_high_order,CatBoost,accuracy,0.986992
+synthetic_sparse_high_order,Gradient Boosting,accuracy,0.983740
 synthetic_sparse_high_order,LightGBM,accuracy,0.995122
 synthetic_sparse_high_order,Linear/Ridge,accuracy,0.973984
 synthetic_sparse_high_order,MLP,accuracy,0.972358
@@ -54,6 +60,7 @@ synthetic_sparse_high_order,TST-v1-Gate,accuracy,0.973984
 synthetic_sparse_high_order,TST-v2-GateFourier,accuracy,0.973984
 synthetic_sparse_high_order,TST-v3-MoE,accuracy,0.973984
 synthetic_xor,CatBoost,accuracy,0.993496
+synthetic_xor,Gradient Boosting,accuracy,0.863415
 synthetic_xor,LightGBM,accuracy,0.993496
 synthetic_xor,Linear/Ridge,accuracy,0.452033
 synthetic_xor,MLP,accuracy,0.773984
