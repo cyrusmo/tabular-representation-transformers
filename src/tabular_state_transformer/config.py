@@ -24,6 +24,8 @@ class TabularStateConfig:
     batch_size: int = 256
     max_epochs: int = 20
     random_state: int = 42
+    early_stopping_patience: int | None = 10
+    early_stopping_min_delta: float = 1e-4
 
     def __post_init__(self) -> None:
         if self.use_sparse_gate is not None:

@@ -85,6 +85,8 @@ DEFAULT_BASELINES = [
     "catboost",
 ]
 
+TREE_BASELINE_LABELS = {"Random Forest", "Gradient Boosting", "LightGBM", "CatBoost"}
+
 MODEL_CONFIGS = {
     "TST-v0": "configs/model/tst_v0.yaml",
     "TST-v1-Gate": "configs/model/tst_v1_gate.yaml",
@@ -140,11 +142,167 @@ def _error_result(
     )
 
 
+def _ok_results(results: list[BenchmarkResult]) -> list[BenchmarkResult]:
+    return [result for result in results if result.status == "ok" and np.isfinite(result.score)]
+
+
+def _ranked_results(results: list[BenchmarkResult]) -> list[tuple[BenchmarkResult, int]]:
+    groups: dict[tuple[str, int, str], list[BenchmarkResult]] = {}
+    for result in _ok_results(results):
+        groups.setdefault((result.dataset, result.seed, result.metric), []).append(result)
+
+    ranked: list[tuple[BenchmarkResult, int]] = []
+    for (_, _, metric), group in groups.items():
+        reverse = metric == "accuracy"
+        ordered = sorted(group, key=lambda result: result.score, reverse=reverse)
+        previous_score: float | None = None
+        previous_rank = 0
+        for index, result in enumerate(ordered, start=1):
+            if previous_score is not None and result.score == previous_score:
+                rank = previous_rank
+            else:
+                rank = index
+                previous_rank = rank
+                previous_score = result.score
+            ranked.append((result, rank))
+    return ranked
+
+
+def _append_benchmark_summary(results: list[BenchmarkResult], output_path: str | Path) -> None:
+    path = Path(output_path)
+    ranked = _ranked_results(results)
+    ok_count = len(_ok_results(results))
+    error_count = len(results) - ok_count
+    by_model: dict[str, dict[str, object]] = {}
+    for result, rank in ranked:
+        stats = by_model.setdefault(
+            result.model,
+            {
+                "family": result.family,
+                "variant": result.variant,
+                "ranks": [],
+                "wins": 0,
+                "ok_rows": 0,
+            },
+        )
+        stats["ranks"].append(rank)
+        stats["ok_rows"] = int(stats["ok_rows"]) + 1
+        if rank == 1:
+            stats["wins"] = int(stats["wins"]) + 1
+
+    summary_rows = []
+    for model, stats in by_model.items():
+        ranks = stats["ranks"]
+        assert isinstance(ranks, list)
+        summary_rows.append(
+            {
+                "model": model,
+                "family": stats["family"],
+                "variant": stats["variant"],
+                "mean_rank": sum(ranks) / len(ranks),
+                "wins": stats["wins"],
+                "ok_rows": stats["ok_rows"],
+            }
+        )
+    summary_rows.sort(key=lambda row: (float(row["mean_rank"]), str(row["model"])))
+
+    tree_ranks = [rank for result, rank in ranked if result.model in TREE_BASELINE_LABELS]
+    tst_ranks = [rank for result, rank in ranked if result.family == "ablation"]
+    tree_mean = sum(tree_ranks) / len(tree_ranks) if tree_ranks else float("nan")
+    tst_mean = sum(tst_ranks) / len(tst_ranks) if tst_ranks else float("nan")
+    if np.isfinite(tree_mean) and np.isfinite(tst_mean) and tree_mean < tst_mean:
+        interpretation = (
+            "Tree baselines remain ahead on this refresh. That is the empirical baseline for the "
+            "next diagnostic pass, not a result to hide."
+        )
+    elif np.isfinite(tree_mean) and np.isfinite(tst_mean):
+        interpretation = (
+            "TST variants are competitive with the tree baselines on mean rank in this refresh; "
+            "the next step is to confirm whether diagnostics show stable learning."
+        )
+    else:
+        interpretation = "Tree-vs-TST comparison is unavailable because one side has no successful rows."
+
+    lines = [
+        "",
+        "## Rank And Win Summary",
+        "",
+        f"- Total rows: {len(results)}",
+        f"- Successful rows: {ok_count}",
+        f"- Error rows: {error_count}",
+        "- Lower mean rank is better; `status=error` rows are excluded from ranks and wins.",
+        "",
+        "| Model | Family | Variant | Mean Rank | Wins | Ok Rows |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in summary_rows:
+        lines.append(
+            "| {model} | {family} | {variant} | {mean_rank:.3f} | {wins} | {ok_rows} |".format(**row)
+        )
+    lines.extend(
+        [
+            "",
+            "## Tree Vs TST Interpretation",
+            "",
+            f"- Tree mean rank: {tree_mean:.3f}" if np.isfinite(tree_mean) else "- Tree mean rank: unavailable",
+            f"- TST mean rank: {tst_mean:.3f}" if np.isfinite(tst_mean) else "- TST mean rank: unavailable",
+            f"- {interpretation}",
+            "",
+        ]
+    )
+    path.write_text(path.read_text() + "\n".join(lines) + "\n")
+
+
+def _diagnostic_error_row(
+    *,
+    model: str,
+    dataset: str,
+    seed: int,
+    task: str,
+    variant: str,
+    n_samples: int,
+    n_features: int,
+    error: Exception,
+) -> dict[str, object]:
+    return {
+        "dataset": dataset,
+        "seed": seed,
+        "task": task,
+        "family": "ablation",
+        "model": model,
+        "variant": variant,
+        "n_samples": n_samples,
+        "n_features": n_features,
+        "status": "error",
+        "error_message": str(error),
+        "epoch": "",
+        "train_loss": "",
+        "train_metric": "",
+        "val_metric": "",
+        "grad_norm": "",
+        "grad_norm_max": "",
+        "prediction_mean": "",
+        "prediction_std": "",
+        "train_val_gap": "",
+        "has_gate": "",
+        "gate_mean": "",
+        "gate_median": "",
+        "gate_sparsity": "",
+        "best_epoch": "",
+        "best_val_metric": "",
+        "final_val_metric": "",
+        "final_vs_best": "",
+        "early_stopped": "",
+        "effective_training_status": "unstable",
+    }
+
+
 def run_benchmark(
     suite: str = "synthetic",
     *,
     output_path: str | Path = "reports/benchmark_results.md",
     csv_output_path: str | Path | None = None,
+    diagnostics_output_path: str | Path | None = None,
     n_samples: int = 512,
     max_epochs: int = 2,
     seeds: Sequence[int] | None = None,
@@ -158,6 +316,7 @@ def run_benchmark(
     selected_baselines = list(DEFAULT_BASELINES if baselines is None else baselines)
     selected_models = list(MODEL_CONFIGS if model_configs is None else model_configs)
     results: list[BenchmarkResult] = []
+    diagnostic_rows: list[dict[str, object]] = []
     repo_root = Path(__file__).resolve().parents[3]
 
     for seed in selected_seeds:
@@ -252,6 +411,22 @@ def run_benchmark(
                             raw_features,
                         )
                     )
+                    for diagnostic in trained.diagnostics:
+                        diagnostic_rows.append(
+                            {
+                                "dataset": dataset_name,
+                                "seed": seed,
+                                "task": bundle.task_type,
+                                "family": "ablation",
+                                "model": label,
+                                "variant": label,
+                                "n_samples": total_samples,
+                                "n_features": raw_features,
+                                "status": "ok",
+                                "error_message": "",
+                                **diagnostic,
+                            }
+                        )
                 except Exception as exc:
                     if not continue_on_error:
                         raise
@@ -268,8 +443,23 @@ def run_benchmark(
                             error=exc,
                         )
                     )
+                    diagnostic_rows.append(
+                        _diagnostic_error_row(
+                            model=label,
+                            dataset=dataset_name,
+                            seed=seed,
+                            task=bundle.task_type,
+                            variant=label,
+                            n_samples=total_samples,
+                            n_features=raw_features,
+                            error=exc,
+                        )
+                    )
 
     write_markdown_table([result.as_row() for result in results], output_path)
+    _append_benchmark_summary(results, output_path)
     if csv_output_path is not None:
         write_csv_table([result.as_row() for result in results], csv_output_path)
+    if diagnostics_output_path is not None:
+        write_csv_table(diagnostic_rows, diagnostics_output_path)
     return results

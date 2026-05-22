@@ -27,6 +27,7 @@ def main() -> None:
     )
     parser.add_argument("--output", default="reports/benchmark_results.md")
     parser.add_argument("--output-csv", default=None)
+    parser.add_argument("--diagnostics-output", default=None)
     parser.add_argument("--n-samples", type=int, default=512)
     parser.add_argument("--max-epochs", type=int, default=2)
     parser.add_argument("--seeds", default=None, help="Comma-separated seeds, e.g. 42,43,44")
@@ -44,6 +45,7 @@ def main() -> None:
         args.suite,
         output_path=args.output,
         csv_output_path=args.output_csv,
+        diagnostics_output_path=args.diagnostics_output,
         n_samples=args.n_samples,
         max_epochs=args.max_epochs,
         seeds=seeds,

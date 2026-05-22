@@ -4,15 +4,17 @@ Required comparisons: linear/logistic/ridge, MLP, random forest, XGBoost or Ligh
 
 ## Synthetic Stress Track
 
-Run the quick two-dataset smoke benchmark:
+Run the fast synthetic-stress smoke benchmark:
 
 ```bash
 venv/bin/python scripts/run_benchmark.py \
-  --suite synthetic \
+  --suite synthetic_stress \
+  --seeds 42,43,44 \
   --n-samples 512 \
   --max-epochs 2 \
   --output outputs/smoke/smoke_benchmark_results.md \
-  --output-csv outputs/smoke/smoke_benchmark_results.csv
+  --output-csv outputs/smoke/smoke_benchmark_results.csv \
+  --diagnostics-output outputs/smoke/smoke_tst_diagnostics.csv
 ```
 
 Run the broader synthetic stress suite across repeated seeds:
@@ -24,7 +26,8 @@ venv/bin/python scripts/run_benchmark.py \
   --n-samples 1024 \
   --max-epochs 20 \
   --output reports/benchmark_results.md \
-  --output-csv reports/benchmark_results.csv
+  --output-csv reports/benchmark_results.csv \
+  --diagnostics-output reports/tst_diagnostics.csv
 ```
 
 The stress suite covers axis-aligned thresholds, XOR interactions, piecewise regression,
