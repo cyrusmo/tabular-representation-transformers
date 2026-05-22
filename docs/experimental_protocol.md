@@ -29,6 +29,7 @@ Baselines:
 - MLP
 - LightGBM
 - CatBoost
+- Optional local FT-Transformer-style neural baseline
 
 TST ablations:
 
@@ -39,6 +40,16 @@ TST ablations:
 
 XGBoost is not part of the default run on this Python 3.13 environment because its current wheel can
 segfault in native data handling. It remains available for isolated compatibility checks.
+
+The local FT-Transformer-style baseline is optional and dependency-free. It is labeled
+`model="FT-Transformer-style"` and `variant="local_ft_transformer"` to avoid implying exact
+reproduction of a paper reference implementation.
+
+The fair TST mode is opt-in through `benchmark_mode="tuned_tst_benchmark"`. It keeps tree defaults
+unchanged and adds tuned TST rows selected from a fixed learning-rate-only budget: `1e-4`, `3e-4`,
+and `1e-3`. Tuned rows record `selected_config_id`, selected learning rate, selection metric/mode,
+selection score, selected epoch, `candidate_config_count=3`, `candidate_lrs="1e-4,3e-4,1e-3"`, and
+`tuning_budget_type="lr_only"`.
 
 ## Metrics
 

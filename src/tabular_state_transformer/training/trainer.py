@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Callable
 
 import numpy as np
 import torch
+from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
 from tabular_state_transformer.config import TabularStateConfig
@@ -28,7 +30,7 @@ from tabular_state_transformer.utils.seed import seed_everything
 
 @dataclass
 class TrainingResult:
-    model: TabularStateTransformer
+    model: nn.Module
     preprocessor: object
     train_loss: float
     val_metric: float
@@ -52,6 +54,7 @@ class Trainer:
         max_epochs: int | None = None,
         early_stopping_patience: int | None = None,
         early_stopping_min_delta: float | None = None,
+        model_factory: Callable[[TabularStateConfig], nn.Module] | None = None,
         device: str = "cpu",
     ):
         self.config = config
@@ -64,6 +67,7 @@ class Trainer:
         self.early_stopping_min_delta = (
             config.early_stopping_min_delta if early_stopping_min_delta is None else early_stopping_min_delta
         )
+        self.model_factory = model_factory or TabularStateTransformer
         self.device = torch.device(device)
 
     def fit(self, bundle: TabularDatasetBundle) -> TrainingResult:
@@ -87,7 +91,7 @@ class Trainer:
             y_train_metric = np.asarray(bundle.y_train)
             y_val_metric = np.asarray(y_val)
 
-        model = TabularStateTransformer(self.config).to(self.device)
+        model = self.model_factory(self.config).to(self.device)
         loss_fn = make_loss(bundle.task_type)
         optim = torch.optim.AdamW(model.parameters(), lr=self.lr)
         dataset = TensorDataset(torch.as_tensor(X_train, dtype=torch.float32), y_train_t)
