@@ -20,7 +20,7 @@ class TabularStateConfig:
     n_classes: int = 2
     dropout: float = 0.1
     gate_l1: float = 0.0
-    gate_init: float = 0.0
+    gate_init: float = -1.0
     gate_lr_multiplier: float = 1.0
     learning_rate: float = 1e-3
     batch_size: int = 256

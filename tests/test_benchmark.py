@@ -73,9 +73,7 @@ def test_default_baselines_include_safe_gradient_boosting_not_xgboost():
 
 def test_openml_suite_uses_curated_paper_track():
     assert _datasets_for_suite("openml") == OPENML_BENCHMARK_DATASETS
-    assert {"adult", "credit-g", "covertype", "california-housing"}.issubset(
-        OPENML_BENCHMARK_DATASETS
-    )
+    assert {"adult", "covertype", "higgs-small", "heloc"}.issubset(OPENML_BENCHMARK_DATASETS)
 
 
 def test_ft_transformer_style_neural_baseline_is_opt_in(tmp_path):

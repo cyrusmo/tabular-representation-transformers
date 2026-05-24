@@ -209,7 +209,7 @@ class Trainer:
             final_vs_best,
             effective_training_status,
             early_stopped,
-            classes,
+            class_labels=classes,
         )
 
     def _optimizer_param_groups(self, model: nn.Module) -> list[dict[str, object]]:

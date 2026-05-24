@@ -31,6 +31,7 @@ def test_gate_can_sparsify_under_strong_l1():
         n_heads=2,
         n_layers=1,
         use_gate=True,
+        gate_init=-2.0,
         gate_l1=0.01,
         gate_lr_multiplier=200.0,
         task="classification",
