@@ -3,7 +3,9 @@ from __future__ import annotations
 from tabular_state_transformer.evaluation import run_benchmark
 from tabular_state_transformer.evaluation.benchmark import (
     DEFAULT_BASELINES,
+    OPENML_BENCHMARK_DATASETS,
     TuningCandidate,
+    _datasets_for_suite,
     _select_best_tuning_candidate,
     _selected_config_id,
 )
@@ -31,6 +33,11 @@ def test_benchmark_script_smoke(tmp_path):
     assert "predict_seconds" in row
     assert row["n_samples"] == 64
     assert row["n_features"] == 20
+    tst_row = next(result.as_row() for result in results if result.model == "TST-v0")
+    assert tst_row["artifact_path"]
+    assert (tmp_path.parent / tst_row["artifact_path"]).exists() or tst_row["artifact_path"].startswith(
+        "outputs/benchmark_artifacts/"
+    )
     assert diagnostics_output.exists()
     diagnostic_text = diagnostics_output.read_text()
     assert "effective_training_status" in diagnostic_text
@@ -62,6 +69,13 @@ def test_benchmark_writes_csv_and_handles_multiple_seeds(tmp_path):
 def test_default_baselines_include_safe_gradient_boosting_not_xgboost():
     assert "gradient_boosting" in DEFAULT_BASELINES
     assert "xgboost" not in DEFAULT_BASELINES
+
+
+def test_openml_suite_uses_curated_paper_track():
+    assert _datasets_for_suite("openml") == OPENML_BENCHMARK_DATASETS
+    assert {"adult", "credit-g", "covertype", "california-housing"}.issubset(
+        OPENML_BENCHMARK_DATASETS
+    )
 
 
 def test_ft_transformer_style_neural_baseline_is_opt_in(tmp_path):

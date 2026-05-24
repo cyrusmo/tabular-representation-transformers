@@ -19,7 +19,7 @@ class TabularStateTransformer(nn.Module):
         super().__init__()
         self.config = config
         self.tokenizer = FeatureTokenizer(config.n_features, config.d_token)
-        self.gate = SparseFeatureGate(config.n_features) if config.use_gate else nn.Identity()
+        self.gate = SparseFeatureGate(config.n_features, init=config.gate_init) if config.use_gate else nn.Identity()
         self.fourier = FourierFeatureBlock(config.d_token) if config.use_fourier else nn.Identity()
         self.wavelet = WaveletFeatureBlock(config.d_token) if config.use_wavelet else nn.Identity()
         self.interaction = InteractionBlock(config.d_token, config.n_heads, config.n_layers, config.dropout)
@@ -48,7 +48,8 @@ class TabularStateTransformer(nn.Module):
     def predict_numpy(self, x: np.ndarray) -> np.ndarray:
         self.eval()
         with torch.no_grad():
-            tensor = torch.as_tensor(x, dtype=torch.float32)
+            device = next(self.parameters()).device
+            tensor = torch.as_tensor(x, dtype=torch.float32, device=device)
             output = self(tensor)
             if self.config.task == "classification":
                 output = torch.softmax(output, dim=-1)
@@ -58,12 +59,13 @@ class TabularStateTransformer(nn.Module):
         save_path = Path(save_directory)
         save_path.mkdir(parents=True, exist_ok=True)
         (save_path / "config.json").write_text(json.dumps(self.config.to_dict(), indent=2))
+        state_dict = {key: value.detach().cpu() for key, value in self.state_dict().items()}
         try:
             from safetensors.torch import save_file
 
-            save_file(self.state_dict(), save_path / "model.safetensors")
+            save_file(state_dict, save_path / "model.safetensors")
         except ImportError:
-            torch.save(self.state_dict(), save_path / "pytorch_model.bin")
+            torch.save(state_dict, save_path / "pytorch_model.bin")
 
     @classmethod
     def from_pretrained(cls, load_directory: str | Path) -> "TabularStateTransformer":

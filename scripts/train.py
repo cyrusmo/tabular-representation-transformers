@@ -6,12 +6,14 @@ from pathlib import Path
 from tabular_state_transformer.config import TabularStateConfig
 from tabular_state_transformer.data import load_dataset
 from tabular_state_transformer.training import Trainer
+from tabular_state_transformer.training.artifacts import save_training_artifacts
 from tabular_state_transformer.utils.io import read_merged_config
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default="configs/experiment/classification.yaml")
+    parser.add_argument("--device", default="cpu", help="Torch device, e.g. cpu or cuda")
     args = parser.parse_args()
 
     config = read_merged_config(args.config)
@@ -27,9 +29,9 @@ def main() -> None:
     }
     model_values.setdefault("n_features", len(bundle.numerical_features) + len(bundle.categorical_features))
     model = TabularStateConfig.from_dict(model_values)
-    result = Trainer(model).fit(bundle)
+    result = Trainer(model, device=args.device).fit(bundle)
     output_dir = Path(config.get("output_dir", "outputs/train"))
-    result.model.save_pretrained(output_dir)
+    save_training_artifacts(result, output_dir)
     print(
         {
             "dataset": bundle.dataset_name,

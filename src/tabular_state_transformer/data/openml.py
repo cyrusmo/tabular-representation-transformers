@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Literal
 
 import numpy as np
@@ -23,6 +24,9 @@ def load_openml_dataset(dataset_id: int):
         import openml
     except ImportError as exc:  # pragma: no cover
         raise ImportError("Install openml to use OpenML benchmark integration") from exc
+    cache_dir = Path(__file__).resolve().parents[3] / "data" / "cache" / "openml"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    openml.config.set_root_cache_directory(str(cache_dir))
     dataset = openml.datasets.get_dataset(dataset_id)
     return dataset.get_data(target=dataset.default_target_attribute)
 

@@ -1,0 +1,152 @@
+| Model | Dataset | Seed | Task | Family | Variant | Status | Metric | Score | Fit Seconds | Predict Seconds | N Samples | N Features | Artifact Path | Error Message | Notes | Benchmark Mode | Base Variant | Selected Config Id | Selected Lr | Selection Metric | Selection Mode | Selection Score | Selected Epoch | Candidate Config Count | Candidate Lrs | Tuning Budget Type |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Linear/Ridge | synthetic_axis_aligned | 42 | classification | baseline | linear | ok | accuracy | 0.846154 | 0.0067 | 0.0015 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_axis_aligned | 42 | classification | baseline | random_forest | ok | accuracy | 0.903846 | 0.0446 | 0.0053 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_axis_aligned | 42 | classification | baseline | gradient_boosting | ok | accuracy | 0.961538 | 0.0811 | 0.0021 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_axis_aligned | 42 | classification | baseline | mlp | ok | accuracy | 0.865385 | 0.0206 | 0.0049 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_axis_aligned | 42 | classification | baseline | lightgbm | ok | accuracy | 1.0 | 0.1964 | 0.0039 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_axis_aligned | 42 | classification | baseline | catboost | ok | accuracy | 0.980769 | 1.9829 | 0.0039 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_axis_aligned | 42 | classification | ablation | TST-v0 | ok | accuracy | 0.903846 | 1.2883 | 0.0079 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_axis_aligned | 42 | classification | ablation | TST-v1-Gate | ok | accuracy | 0.903846 | 0.4308 | 0.0066 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_axis_aligned | 42 | classification | ablation | TST-v2-GateFourier | ok | accuracy | 0.903846 | 0.391 | 0.0076 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_axis_aligned | 42 | classification | ablation | TST-v3-MoE | ok | accuracy | 0.903846 | 0.3648 | 0.0085 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_axis_aligned | 42 | classification | neural_baseline | local_ft_transformer | ok | accuracy | 0.903846 | 0.1361 | 0.0113 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_axis_aligned | 42 | classification | ablation | TST-v0-tuned | ok | accuracy | 0.903846 | 1.1441 | 0.0046 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.901961 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_axis_aligned | 42 | classification | ablation | TST-v1-Gate-tuned | ok | accuracy | 0.903846 | 1.3478 | 0.014 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.901961 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_axis_aligned | 42 | classification | ablation | TST-v2-GateFourier-tuned | ok | accuracy | 0.903846 | 1.3432 | 0.0098 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.901961 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_axis_aligned | 42 | classification | ablation | TST-v3-MoE-tuned | ok | accuracy | 0.903846 | 1.4312 | 0.0079 | 256 | 20 | outputs/benchmark_artifacts/synthetic_axis_aligned/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.901961 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_xor | 42 | classification | baseline | linear | ok | accuracy | 0.423077 | 0.0126 | 0.0018 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_xor | 42 | classification | baseline | random_forest | ok | accuracy | 0.615385 | 0.0399 | 0.005 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_xor | 42 | classification | baseline | gradient_boosting | ok | accuracy | 0.942308 | 0.0837 | 0.0021 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_xor | 42 | classification | baseline | mlp | ok | accuracy | 0.538462 | 0.0273 | 0.0034 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_xor | 42 | classification | baseline | lightgbm | ok | accuracy | 0.942308 | 0.0157 | 0.0032 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_xor | 42 | classification | baseline | catboost | ok | accuracy | 0.961538 | 1.1384 | 0.0119 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_xor | 42 | classification | ablation | TST-v0 | ok | accuracy | 0.5 | 0.4146 | 0.0064 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_xor | 42 | classification | ablation | TST-v1-Gate | ok | accuracy | 0.5 | 0.4408 | 0.0101 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_xor | 42 | classification | ablation | TST-v2-GateFourier | ok | accuracy | 0.5 | 0.3804 | 0.012 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_xor | 42 | classification | ablation | TST-v3-MoE | ok | accuracy | 0.5 | 0.376 | 0.0129 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_xor | 42 | classification | neural_baseline | local_ft_transformer | ok | accuracy | 0.5 | 0.1167 | 0.0027 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_xor | 42 | classification | ablation | TST-v0-tuned | ok | accuracy | 0.576923 | 1.4179 | 0.0148 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.568627 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_xor | 42 | classification | ablation | TST-v1-Gate-tuned | ok | accuracy | 0.653846 | 1.4034 | 0.011 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.607843 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_xor | 42 | classification | ablation | TST-v2-GateFourier-tuned | ok | accuracy | 0.5 | 1.2729 | 0.0086 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_3e-4 | 3e-4 | val_accuracy | maximize | 0.509804 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_xor | 42 | classification | ablation | TST-v3-MoE-tuned | ok | accuracy | 0.5 | 1.2505 | 0.0084 | 256 | 20 | outputs/benchmark_artifacts/synthetic_xor/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.509804 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_piecewise | 42 | regression | baseline | linear | ok | rmse | 0.812638 | 0.0062 | 0.0021 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_piecewise | 42 | regression | baseline | random_forest | ok | rmse | 0.616465 | 0.0558 | 0.0033 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_piecewise | 42 | regression | baseline | gradient_boosting | ok | rmse | 0.404455 | 0.0731 | 0.0022 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_piecewise | 42 | regression | baseline | mlp | ok | rmse | 0.837808 | 0.0193 | 0.0024 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_piecewise | 42 | regression | baseline | lightgbm | ok | rmse | 0.520639 | 0.016 | 0.0077 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_piecewise | 42 | regression | baseline | catboost | ok | rmse | 0.438525 | 1.0661 | 0.0112 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_piecewise | 42 | regression | ablation | TST-v0 | ok | rmse | 1.144144 | 0.4598 | 0.006 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_piecewise | 42 | regression | ablation | TST-v1-Gate | ok | rmse | 1.136181 | 0.4823 | 0.005 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_piecewise | 42 | regression | ablation | TST-v2-GateFourier | ok | rmse | 0.864084 | 0.6761 | 0.0079 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_piecewise | 42 | regression | ablation | TST-v3-MoE | ok | rmse | 0.828646 | 0.3947 | 0.0075 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_piecewise | 42 | regression | neural_baseline | local_ft_transformer | ok | rmse | 0.840905 | 0.129 | 0.0036 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_piecewise | 42 | regression | ablation | TST-v0-tuned | ok | rmse | 0.943115 | 1.1789 | 0.0068 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_3e-4 | 3e-4 | val_rmse | minimize | 0.918419 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_piecewise | 42 | regression | ablation | TST-v1-Gate-tuned | ok | rmse | 0.945405 | 1.2077 | 0.0122 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_3e-4 | 3e-4 | val_rmse | minimize | 0.922080 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_piecewise | 42 | regression | ablation | TST-v2-GateFourier-tuned | ok | rmse | 0.827796 | 1.4619 | 0.0071 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_3e-4 | 3e-4 | val_rmse | minimize | 0.827489 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_piecewise | 42 | regression | ablation | TST-v3-MoE-tuned | ok | rmse | 0.828646 | 1.3573 | 0.0151 | 256 | 20 | outputs/benchmark_artifacts/synthetic_piecewise/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-3 | 1e-3 | val_rmse | minimize | 0.827688 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_irrelevant_noise | 42 | classification | baseline | linear | ok | accuracy | 0.673077 | 0.0074 | 0.0033 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_irrelevant_noise | 42 | classification | baseline | random_forest | ok | accuracy | 0.75 | 0.0443 | 0.0034 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_irrelevant_noise | 42 | classification | baseline | gradient_boosting | ok | accuracy | 0.846154 | 0.2711 | 0.0027 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_irrelevant_noise | 42 | classification | baseline | mlp | ok | accuracy | 0.519231 | 0.0333 | 0.0029 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_irrelevant_noise | 42 | classification | baseline | lightgbm | ok | accuracy | 0.846154 | 0.0468 | 0.0035 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_irrelevant_noise | 42 | classification | baseline | catboost | ok | accuracy | 0.826923 | 4.2769 | 0.0182 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v0 | ok | accuracy | 0.519231 | 2.416 | 0.0543 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v1-Gate | ok | accuracy | 0.519231 | 2.3821 | 0.0512 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v2-GateFourier | ok | accuracy | 0.519231 | 2.7431 | 0.0725 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v3-MoE | ok | accuracy | 0.519231 | 2.6214 | 0.0471 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_irrelevant_noise | 42 | classification | neural_baseline | local_ft_transformer | ok | accuracy | 0.519231 | 0.8689 | 0.021 | 256 | 100 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v0-tuned | ok | accuracy | 0.519231 | 6.8847 | 0.0437 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.509804 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v1-Gate-tuned | ok | accuracy | 0.519231 | 8.4887 | 0.0363 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.509804 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v2-GateFourier-tuned | ok | accuracy | 0.519231 | 8.2893 | 0.0532 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.509804 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_irrelevant_noise | 42 | classification | ablation | TST-v3-MoE-tuned | ok | accuracy | 0.519231 | 8.1042 | 0.0666 | 256 | 100 | outputs/benchmark_artifacts/synthetic_irrelevant_noise/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.529412 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_rotated | 42 | classification | baseline | linear | ok | accuracy | 0.923077 | 0.0063 | 0.0013 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_rotated | 42 | classification | baseline | random_forest | ok | accuracy | 0.884615 | 0.0406 | 0.0036 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_rotated | 42 | classification | baseline | gradient_boosting | ok | accuracy | 0.884615 | 0.1052 | 0.0053 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_rotated | 42 | classification | baseline | mlp | ok | accuracy | 0.807692 | 0.0201 | 0.0021 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_rotated | 42 | classification | baseline | lightgbm | ok | accuracy | 0.865385 | 0.0143 | 0.003 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_rotated | 42 | classification | baseline | catboost | ok | accuracy | 0.884615 | 1.006 | 0.0025 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_rotated | 42 | classification | ablation | TST-v0 | ok | accuracy | 0.634615 | 0.4385 | 0.0129 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_rotated | 42 | classification | ablation | TST-v1-Gate | ok | accuracy | 0.634615 | 0.3807 | 0.009 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_rotated | 42 | classification | ablation | TST-v2-GateFourier | ok | accuracy | 0.634615 | 0.3745 | 0.0079 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_rotated | 42 | classification | ablation | TST-v3-MoE | ok | accuracy | 0.634615 | 0.4911 | 0.013 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_rotated | 42 | classification | neural_baseline | local_ft_transformer | ok | accuracy | 0.634615 | 0.2254 | 0.0065 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_rotated | 42 | classification | ablation | TST-v0-tuned | ok | accuracy | 0.634615 | 1.1907 | 0.0079 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.627451 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_rotated | 42 | classification | ablation | TST-v1-Gate-tuned | ok | accuracy | 0.634615 | 1.2094 | 0.0088 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.627451 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_rotated | 42 | classification | ablation | TST-v2-GateFourier-tuned | ok | accuracy | 0.634615 | 1.2187 | 0.009 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.627451 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_rotated | 42 | classification | ablation | TST-v3-MoE-tuned | ok | accuracy | 0.634615 | 1.2308 | 0.0148 | 256 | 20 | outputs/benchmark_artifacts/synthetic_rotated/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.627451 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_regime | 42 | regression | baseline | linear | ok | rmse | 0.533634 | 0.0076 | 0.0013 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_regime | 42 | regression | baseline | random_forest | ok | rmse | 0.430463 | 0.0466 | 0.003 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_regime | 42 | regression | baseline | gradient_boosting | ok | rmse | 0.430708 | 0.0712 | 0.0018 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_regime | 42 | regression | baseline | mlp | ok | rmse | 0.561411 | 0.02 | 0.0053 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_regime | 42 | regression | baseline | lightgbm | ok | rmse | 0.443542 | 0.013 | 0.002 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_regime | 42 | regression | baseline | catboost | ok | rmse | 0.411334 | 0.8239 | 0.0047 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_regime | 42 | regression | ablation | TST-v0 | ok | rmse | 0.97265 | 0.4077 | 0.0083 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_regime | 42 | regression | ablation | TST-v1-Gate | ok | rmse | 0.970692 | 0.3728 | 0.0086 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_regime | 42 | regression | ablation | TST-v2-GateFourier | ok | rmse | 0.604117 | 0.4948 | 0.0085 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_regime | 42 | regression | ablation | TST-v3-MoE | ok | rmse | 0.662961 | 0.5301 | 0.0118 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_regime | 42 | regression | neural_baseline | local_ft_transformer | ok | rmse | 0.635716 | 0.1249 | 0.0083 | 256 | 20 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_regime | 42 | regression | ablation | TST-v0-tuned | ok | rmse | 0.638268 | 1.2339 | 0.0103 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_3e-4 | 3e-4 | val_rmse | minimize | 0.614762 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_regime | 42 | regression | ablation | TST-v1-Gate-tuned | ok | rmse | 0.662484 | 1.515 | 0.011 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_3e-4 | 3e-4 | val_rmse | minimize | 0.617566 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_regime | 42 | regression | ablation | TST-v2-GateFourier-tuned | ok | rmse | 0.655911 | 1.8292 | 0.014 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_1e-4 | 1e-4 | val_rmse | minimize | 0.608058 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_regime | 42 | regression | ablation | TST-v3-MoE-tuned | ok | rmse | 0.657661 | 1.5414 | 0.0137 | 256 | 20 | outputs/benchmark_artifacts/synthetic_regime/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_rmse | minimize | 0.608797 | 2 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| Linear/Ridge | synthetic_sparse_high_order | 42 | classification | baseline | linear | ok | accuracy | 0.961538 | 0.0057 | 0.0032 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Random Forest | synthetic_sparse_high_order | 42 | classification | baseline | random_forest | ok | accuracy | 0.980769 | 0.0371 | 0.003 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| Gradient Boosting | synthetic_sparse_high_order | 42 | classification | baseline | gradient_boosting | ok | accuracy | 0.942308 | 0.1443 | 0.0018 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| MLP | synthetic_sparse_high_order | 42 | classification | baseline | mlp | ok | accuracy | 0.980769 | 0.0209 | 0.0016 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| LightGBM | synthetic_sparse_high_order | 42 | classification | baseline | lightgbm | ok | accuracy | 0.980769 | 0.0216 | 0.0023 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| CatBoost | synthetic_sparse_high_order | 42 | classification | baseline | catboost | ok | accuracy | 0.980769 | 2.0113 | 0.0082 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v0 | synthetic_sparse_high_order | 42 | classification | ablation | TST-v0 | ok | accuracy | 0.980769 | 0.9888 | 0.0306 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v0 |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v1-Gate | synthetic_sparse_high_order | 42 | classification | ablation | TST-v1-Gate | ok | accuracy | 0.980769 | 1.0724 | 0.031 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v1_gate |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v2-GateFourier | synthetic_sparse_high_order | 42 | classification | ablation | TST-v2-GateFourier | ok | accuracy | 0.980769 | 1.1598 | 0.0353 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v2_gate_fourier |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST-v3-MoE | synthetic_sparse_high_order | 42 | classification | ablation | TST-v3-MoE | ok | accuracy | 0.980769 | 1.0605 | 0.0178 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v3_moe |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| FT-Transformer-style | synthetic_sparse_high_order | 42 | classification | neural_baseline | local_ft_transformer | ok | accuracy | 0.980769 | 0.3692 | 0.0118 | 256 | 50 |  |  |  | tuned_tst_benchmark |  |  |  |  |  |  |  |  |  |  |
+| TST | synthetic_sparse_high_order | 42 | classification | ablation | TST-v0-tuned | ok | accuracy | 0.980769 | 3.0141 | 0.0456 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v0_tuned |  |  | tuned_tst_benchmark | TST-v0 | tst_v0_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.980392 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_sparse_high_order | 42 | classification | ablation | TST-v1-Gate-tuned | ok | accuracy | 0.980769 | 3.0887 | 0.0254 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v1_gate_tuned |  |  | tuned_tst_benchmark | TST-v1-Gate | tst_v1_gate_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.980392 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_sparse_high_order | 42 | classification | ablation | TST-v2-GateFourier-tuned | ok | accuracy | 0.980769 | 3.3122 | 0.0306 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v2_gate_fourier_tuned |  |  | tuned_tst_benchmark | TST-v2-GateFourier | tst_v2_gate_fourier_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.980392 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+| TST | synthetic_sparse_high_order | 42 | classification | ablation | TST-v3-MoE-tuned | ok | accuracy | 0.980769 | 3.4192 | 0.0368 | 256 | 50 | outputs/benchmark_artifacts/synthetic_sparse_high_order/seed_42/tst_v3_moe_tuned |  |  | tuned_tst_benchmark | TST-v3-MoE | tst_v3_moe_lr_1e-4 | 1e-4 | val_accuracy | maximize | 0.980392 | 1 | 3 | 1e-4,3e-4,1e-3 | lr_only |
+
+## Rank And Win Summary
+
+- Total rows: 105
+- Successful rows: 105
+- Error rows: 0
+- Lower mean rank is better; `status=error` rows are excluded from ranks and wins.
+
+| Model | Family | Variant | Mean Rank | Wins | Ok Rows |
+| --- | --- | --- | --- | --- | --- |
+| CatBoost | baseline | catboost | 1.714 | 3 | 7 |
+| LightGBM | baseline | lightgbm | 2.429 | 3 | 7 |
+| Random Forest | baseline | random_forest | 3.143 | 1 | 7 |
+| Gradient Boosting | baseline | gradient_boosting | 3.857 | 2 | 7 |
+| TST | ablation | TST-v2-GateFourier-tuned | 6.000 | 1 | 7 |
+| FT-Transformer-style | neural_baseline | local_ft_transformer | 6.286 | 1 | 7 |
+| TST | ablation | TST-v3-MoE-tuned | 6.286 | 1 | 7 |
+| TST-v2-GateFourier | ablation | TST-v2-GateFourier | 6.286 | 1 | 7 |
+| TST | ablation | TST-v0-tuned | 6.429 | 1 | 7 |
+| TST-v3-MoE | ablation | TST-v3-MoE | 6.571 | 1 | 7 |
+| TST | ablation | TST-v1-Gate-tuned | 6.714 | 1 | 7 |
+| MLP | baseline | mlp | 7.000 | 1 | 7 |
+| TST-v1-Gate | ablation | TST-v1-Gate | 7.714 | 1 | 7 |
+| TST-v0 | ablation | TST-v0 | 8.000 | 1 | 7 |
+| Linear/Ridge | baseline | linear | 8.571 | 1 | 7 |
+
+## Tree Vs TST Interpretation
+
+- Tree mean rank: 2.786
+- TST mean rank: 7.143
+- Tree baselines remain ahead on this refresh. That is the empirical baseline for the next diagnostic pass, not a result to hide.
+
+## Fair TST Tuning Summary
+
+- Untuned TST mean rank: 7.143
+- Tuned TST mean rank: 6.357
+- Tuning improvement: 0.786 mean-rank points
+- Remaining gap to trees: 3.571 mean-rank points
+- Tuned rows use a fixed three-candidate learning-rate budget, not a broad hyperparameter search.
+
+## Neural Baseline Summary
+
+- Local FT-Transformer-style mean rank: 6.286
+- This is a local FT-Transformer-style baseline, not a validated reference-paper reproduction.
+

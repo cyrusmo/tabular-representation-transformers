@@ -15,6 +15,8 @@ from tabular_state_transformer.evaluation.reporting import write_csv_table, writ
 from tabular_state_transformer.models.ft_transformer import FTTransformerStyle
 from tabular_state_transformer.models.baselines import make_baseline
 from tabular_state_transformer.training import Trainer
+from tabular_state_transformer.training.artifacts import save_training_artifacts
+from tabular_state_transformer.training.trainer import TrainingResult
 from tabular_state_transformer.utils.io import read_yaml
 
 
@@ -114,6 +116,17 @@ BENCHMARK_MODES = {"default_benchmark", "tuned_tst_benchmark"}
 DEFAULT_TUNING_LRS = [1e-4, 3e-4, 1e-3]
 DEFAULT_TUNING_LRS_TEXT = "1e-4,3e-4,1e-3"
 
+OPENML_BENCHMARK_DATASETS = [
+    "adult",
+    "bank-marketing",
+    "covertype",
+    "higgs-small",
+    "heloc",
+    "california-housing",
+    "credit-g",
+    "jannis",
+]
+
 MODEL_CONFIGS = {
     "TST-v0": "configs/model/tst_v0.yaml",
     "TST-v1-Gate": "configs/model/tst_v1_gate.yaml",
@@ -190,7 +203,7 @@ def _datasets_for_suite(suite: str) -> list[str]:
     if suite == "synthetic_stress":
         return SYNTHETIC_STRESS_DATASETS
     if suite == "openml":
-        return ["adult"]
+        return OPENML_BENCHMARK_DATASETS
     raise ValueError(f"Unknown benchmark suite '{suite}'.")
 
 
@@ -535,8 +548,49 @@ def _predict_trained(trained, bundle) -> tuple[float, np.ndarray]:
     return perf_counter() - start, pred
 
 
+def _metric_target_for_trained(trained: TrainingResult, bundle) -> np.ndarray:
+    if bundle.task_type == "classification" and trained.class_labels is not None:
+        return np.searchsorted(trained.class_labels, bundle.y_test)
+    return bundle.y_test
+
+
 def _selection_score_text(value: float) -> str:
     return f"{value:.6f}"
+
+
+def _artifact_directory(
+    repo_root: Path,
+    *,
+    dataset_name: str,
+    seed: int,
+    model_label: str,
+) -> Path:
+    return (
+        repo_root
+        / "outputs"
+        / "benchmark_artifacts"
+        / dataset_name
+        / f"seed_{seed}"
+        / _safe_id(model_label)
+    )
+
+
+def _persist_tst_artifact(
+    repo_root: Path,
+    trained: TrainingResult,
+    *,
+    dataset_name: str,
+    seed: int,
+    model_label: str,
+) -> str:
+    artifact_dir = _artifact_directory(
+        repo_root,
+        dataset_name=dataset_name,
+        seed=seed,
+        model_label=model_label,
+    )
+    save_training_artifacts(trained, artifact_dir)
+    return str(artifact_dir.relative_to(repo_root))
 
 
 def run_benchmark(
@@ -555,6 +609,7 @@ def run_benchmark(
     model_configs: Sequence[str] | None = None,
     neural_baselines: Sequence[str] | None = None,
     continue_on_error: bool = True,
+    device: str = "cpu",
 ) -> list[BenchmarkResult]:
     if benchmark_mode not in BENCHMARK_MODES:
         raise ValueError(f"Unknown benchmark mode '{benchmark_mode}'.")
@@ -570,7 +625,11 @@ def run_benchmark(
 
     for seed in selected_seeds:
         for dataset_name in selected_datasets:
-            load_kwargs = {"n_samples": n_samples} if dataset_name.startswith("synthetic") else {}
+            load_kwargs = (
+                {"n_samples": n_samples}
+                if dataset_name.startswith("synthetic") or suite == "openml"
+                else {}
+            )
             bundle = load_dataset(dataset_name, split_seed=seed, **load_kwargs)
             total_samples = len(bundle.X_train) + len(bundle.X_val) + len(bundle.X_test)
             raw_features = bundle.X_train.shape[1]
@@ -636,10 +695,22 @@ def run_benchmark(
                         seed=seed,
                     )
                     start = perf_counter()
-                    trained = Trainer(config, max_epochs=max_epochs, batch_size=128).fit(bundle)
+                    trained = Trainer(
+                        config,
+                        max_epochs=max_epochs,
+                        batch_size=128,
+                        device=device,
+                    ).fit(bundle)
                     fit_seconds = perf_counter() - start
                     predict_seconds, pred = _predict_trained(trained, bundle)
-                    metric, score = _metric(bundle.task_type, bundle.y_test, pred)
+                    metric, score = _metric(bundle.task_type, _metric_target_for_trained(trained, bundle), pred)
+                    artifact_path = _persist_tst_artifact(
+                        repo_root,
+                        trained,
+                        dataset_name=dataset_name,
+                        seed=seed,
+                        model_label=label,
+                    )
                     results.append(
                         BenchmarkResult(
                             label,
@@ -654,6 +725,7 @@ def run_benchmark(
                             predict_seconds,
                             total_samples,
                             raw_features,
+                            artifact_path=artifact_path,
                             benchmark_mode=benchmark_mode,
                         )
                     )
@@ -720,10 +792,11 @@ def run_benchmark(
                         max_epochs=max_epochs,
                         batch_size=128,
                         model_factory=spec["model_factory"],
+                        device=device,
                     ).fit(bundle)
                     fit_seconds = perf_counter() - start
                     predict_seconds, pred = _predict_trained(trained, bundle)
-                    metric, score = _metric(bundle.task_type, bundle.y_test, pred)
+                    metric, score = _metric(bundle.task_type, _metric_target_for_trained(trained, bundle), pred)
                     results.append(
                         BenchmarkResult(
                             label,
@@ -808,6 +881,7 @@ def run_benchmark(
                                 lr=lr,
                                 max_epochs=resolved_tuning_max_epochs,
                                 batch_size=128,
+                                device=device,
                             ).fit(bundle)
                             fit_seconds = perf_counter() - start
                             candidates.append(
@@ -832,10 +906,18 @@ def run_benchmark(
                         trained = selected.trained
                         fit_seconds = sum(candidate.fit_seconds for candidate in candidates)
                         predict_seconds, pred = _predict_trained(trained, bundle)
-                        metric, score = _metric(bundle.task_type, bundle.y_test, pred)
+                        metric, score = _metric(bundle.task_type, _metric_target_for_trained(trained, bundle), pred)
                         selected_lr_text = _format_lr(selected.lr)
                         selected_score_text = _selection_score_text(selected.selection_score)
                         notes = "; ".join(candidate_errors)
+                        tuned_label = f"{label}-tuned"
+                        artifact_path = _persist_tst_artifact(
+                            repo_root,
+                            trained,
+                            dataset_name=dataset_name,
+                            seed=seed,
+                            model_label=tuned_label,
+                        )
                         results.append(
                             BenchmarkResult(
                                 "TST",
@@ -843,13 +925,14 @@ def run_benchmark(
                                 seed,
                                 bundle.task_type,
                                 "ablation",
-                                f"{label}-tuned",
+                                tuned_label,
                                 metric,
                                 score,
                                 fit_seconds,
                                 predict_seconds,
                                 total_samples,
                                 raw_features,
+                                artifact_path=artifact_path,
                                 notes=notes,
                                 benchmark_mode=benchmark_mode,
                                 base_variant=label,

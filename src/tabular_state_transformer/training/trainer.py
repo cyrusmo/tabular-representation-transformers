@@ -8,6 +8,7 @@ import torch
 from torch import nn
 from torch.utils.data import DataLoader, TensorDataset
 
+from tabular_state_transformer.blocks.gate import SparseFeatureGate
 from tabular_state_transformer.config import TabularStateConfig
 from tabular_state_transformer.data.preprocessing import make_preprocessor, transform_to_float32
 from tabular_state_transformer.data.schema import TabularDatasetBundle
@@ -42,6 +43,7 @@ class TrainingResult:
     final_vs_best: float = 0.0
     effective_training_status: str = ""
     early_stopped: bool = False
+    class_labels: np.ndarray | None = None
 
 
 class Trainer:
@@ -86,6 +88,7 @@ class Trainer:
             y_train_metric = np.asarray(y_train)
             y_val_metric = np.asarray(y_val)
         else:
+            classes = None
             y_val = bundle.y_val
             y_train_t = torch.as_tensor(bundle.y_train, dtype=torch.float32)
             y_train_metric = np.asarray(bundle.y_train)
@@ -93,7 +96,7 @@ class Trainer:
 
         model = self.model_factory(self.config).to(self.device)
         loss_fn = make_loss(bundle.task_type)
-        optim = torch.optim.AdamW(model.parameters(), lr=self.lr)
+        optim = torch.optim.AdamW(self._optimizer_param_groups(model), lr=self.lr)
         dataset = TensorDataset(torch.as_tensor(X_train, dtype=torch.float32), y_train_t)
         loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True)
         last_loss = 0.0
@@ -206,4 +209,22 @@ class Trainer:
             final_vs_best,
             effective_training_status,
             early_stopped,
+            classes,
         )
+
+    def _optimizer_param_groups(self, model: nn.Module) -> list[dict[str, object]]:
+        if (
+            not self.config.use_gate
+            or self.config.gate_lr_multiplier == 1.0
+            or not hasattr(model, "gate")
+            or not isinstance(model.gate, SparseFeatureGate)
+        ):
+            return [{"params": list(model.parameters())}]
+
+        gate_params = [model.gate.logits]
+        gate_param_ids = {id(param) for param in gate_params}
+        base_params = [param for param in model.parameters() if id(param) not in gate_param_ids]
+        return [
+            {"params": base_params},
+            {"params": gate_params, "lr": self.lr * self.config.gate_lr_multiplier},
+        ]

@@ -46,6 +46,20 @@ def _bundle_from_frame(
     )
 
 
+def _sample_rows(
+    X: pd.DataFrame,
+    y: np.ndarray,
+    *,
+    n_samples: int | None,
+    split_seed: int,
+) -> tuple[pd.DataFrame, np.ndarray]:
+    if n_samples is None or len(X) <= n_samples:
+        return X, y
+    row_indices = np.random.default_rng(split_seed).choice(len(X), size=n_samples, replace=False)
+    row_indices.sort()
+    return X.iloc[row_indices].reset_index(drop=True), y[row_indices]
+
+
 def load_dataset(
     name: str,
     *,
@@ -82,7 +96,9 @@ def load_dataset(
         )
 
     if source == "openml":
+        n_samples = kwargs.pop("n_samples", None)
         X, y, task_type, target_name = load_openml_named(name)
+        X, y = _sample_rows(X, y, n_samples=n_samples, split_seed=split_seed)
         return _bundle_from_frame(
             X,
             y,
@@ -93,6 +109,7 @@ def load_dataset(
         )
 
     if source in {"local", "local_csv", "local_parquet"}:
+        n_samples = kwargs.pop("n_samples", None)
         if path is None:
             raise ValueError("A local dataset requires path=...")
         local_path = Path(path)
@@ -104,6 +121,7 @@ def load_dataset(
             raise ValueError(f"Target column '{target}' not found in {local_path}")
         y = frame[target].to_numpy()
         X = frame.drop(columns=[target])
+        X, y = _sample_rows(X, y, n_samples=n_samples, split_seed=split_seed)
         task_type = task or ("classification" if frame[target].nunique() <= 20 else "regression")
         return _bundle_from_frame(
             X,
@@ -119,13 +137,20 @@ def load_dataset(
             from datasets import load_dataset as hf_load_dataset
         except ImportError as exc:  # pragma: no cover
             raise ImportError("Install datasets to use Hugging Face dataset loading") from exc
+        n_samples = kwargs.pop("n_samples", None)
         dataset = hf_load_dataset(name, split=kwargs.pop("split", "train"), **kwargs)
         frame = dataset.to_pandas()
         if target not in frame.columns:
             raise ValueError(f"Target column '{target}' not found in Hugging Face dataset")
-        return _bundle_from_frame(
+        X, y = _sample_rows(
             frame.drop(columns=[target]),
             frame[target].to_numpy(),
+            n_samples=n_samples,
+            split_seed=split_seed,
+        )
+        return _bundle_from_frame(
+            X,
+            y,
             dataset_name=name,
             task_type=task or "classification",
             target_name=target,

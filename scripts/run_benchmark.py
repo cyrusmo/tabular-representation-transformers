@@ -42,6 +42,7 @@ def main() -> None:
     parser.add_argument("--models", default=None, help="Comma-separated TST model labels")
     parser.add_argument("--neural-baselines", default=None, help="Comma-separated neural baseline keys")
     parser.add_argument("--fail-fast", action="store_true")
+    parser.add_argument("--device", default="cpu", help="Torch device, e.g. cpu or cuda")
     args = parser.parse_args()
 
     seeds = _split_int_csv(args.seeds)
@@ -63,6 +64,7 @@ def main() -> None:
         model_configs=_split_csv(args.models),
         neural_baselines=_split_csv(args.neural_baselines),
         continue_on_error=not args.fail_fast,
+        device=args.device,
     )
     print({"results": len(results), "output": args.output})
 
