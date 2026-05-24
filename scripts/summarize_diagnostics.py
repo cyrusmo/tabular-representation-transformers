@@ -132,8 +132,14 @@ def _write_markdown(rows: list[dict[str, object]], path: Path, source: Path) -> 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="reports/tst_diagnostics.csv")
-    parser.add_argument("--output-md", default="reports/diagnostics_summary.md")
+    parser.add_argument(
+        "--input",
+        default="reports/experiments/legacy/diagnostics.csv",
+    )
+    parser.add_argument(
+        "--output-md",
+        default="reports/analysis/diagnostics_summary.md",
+    )
     parser.add_argument("--output-csv", default="reports/tables/diagnostics_summary.csv")
     args = parser.parse_args()
 

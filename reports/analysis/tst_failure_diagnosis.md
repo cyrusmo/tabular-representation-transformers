@@ -1,6 +1,6 @@
 # TST Failure Diagnosis
 
-**Source:** `reports/tst_diagnostics.csv` (synthetic stress, seeds 42–44, 1024 samples, default training)  
+**Source:** `reports/experiments/legacy/diagnostics.csv` (synthetic stress, seeds 42–44, 1024 samples, default training)  
 **Analysis date:** 2026-05-24
 
 ## Executive summary

@@ -156,9 +156,18 @@ def _write_markdown(rows: list[dict[str, object]], path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="reports/benchmark_results.csv")
-    parser.add_argument("--output-md", default="reports/tables/benchmark_seed_summary.md")
-    parser.add_argument("--output-csv", default="reports/tables/benchmark_seed_summary.csv")
+    parser.add_argument(
+        "--input",
+        default="reports/experiments/fair_comparison/results.csv",
+    )
+    parser.add_argument(
+        "--output-md",
+        default="reports/experiments/fair_comparison/summary.md",
+    )
+    parser.add_argument(
+        "--output-csv",
+        default="reports/tables/benchmark_seed_summary.csv",
+    )
     args = parser.parse_args()
 
     rows = _aggregate(_read_success_rows(Path(args.input)))

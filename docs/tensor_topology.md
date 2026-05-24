@@ -14,7 +14,7 @@ artifacts, not claims of model superiority.
 
 ```bash
 venv/bin/python scripts/visualize_topology.py \
-  --results-csv reports/benchmark_results.csv \
+  --results-csv reports/experiments/legacy/results.csv \
   --output-dir reports/figures \
   --tasks synthetic_xor,synthetic_piecewise,synthetic_axis_threshold,synthetic_rotated \
   --seeds 42,43,44 \

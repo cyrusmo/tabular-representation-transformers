@@ -596,7 +596,7 @@ def _persist_tst_artifact(
 def run_benchmark(
     suite: str = "synthetic",
     *,
-    output_path: str | Path = "reports/benchmark_results.md",
+    output_path: str | Path = "reports/experiments/legacy/results.md",
     csv_output_path: str | Path | None = None,
     diagnostics_output_path: str | Path | None = None,
     n_samples: int = 512,

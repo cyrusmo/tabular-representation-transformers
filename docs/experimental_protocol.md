@@ -17,7 +17,7 @@ The current synthetic stress suite uses:
 
 The first credible small run uses seeds `42,43,44`, `n_samples=1024`, and `max_epochs=20` for TST
 variants. Smoke outputs are written under `outputs/smoke/`; research outputs are written under
-`reports/`.
+`reports/experiments/` (see `reports/README.md`).
 
 ## Models
 
@@ -59,7 +59,7 @@ count, feature count, artifact path, and error message.
 
 ## TST Training Diagnostics
 
-TST runs emit `reports/tst_diagnostics.csv` for the credible benchmark. Each row records dataset,
+TST runs emit `reports/experiments/<experiment>/diagnostics.csv` for credible benchmarks. Each row records dataset,
 seed, variant, epoch, train loss, train metric, validation metric, train-validation gap, gradient
 norm, prediction mean/std, gate summaries when present, best epoch, best validation metric, final
 validation metric, final-vs-best gap, early stopping state, and `effective_training_status`.

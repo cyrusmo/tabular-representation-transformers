@@ -25,9 +25,9 @@ venv/bin/python scripts/run_benchmark.py \
   --seeds 42,43,44 \
   --n-samples 1024 \
   --max-epochs 20 \
-  --output reports/benchmark_results.md \
-  --output-csv reports/benchmark_results.csv \
-  --diagnostics-output reports/tst_diagnostics.csv
+  --output reports/experiments/legacy/results.md \
+  --output-csv reports/experiments/legacy/results.csv \
+  --diagnostics-output reports/experiments/legacy/diagnostics.csv
 ```
 
 Run the local FT-Transformer-style smoke path:
@@ -61,8 +61,11 @@ venv/bin/python scripts/run_benchmark.py \
   --diagnostics-output outputs/smoke/tuned_tst_smoke_diagnostics.csv
 ```
 
-Future full fair-comparison artifacts should use the synthetic-stress suite and write to
-`reports/fair_comparison_results.{md,csv}` plus `reports/fair_comparison_diagnostics.csv`.
+Fair-comparison artifacts use the synthetic-stress suite and write to
+`reports/experiments/fair_comparison/` (`results.{md,csv}`, `diagnostics.csv`, `summary.md`).
+
+Targeted XOR/noise diagnostic runs write to `reports/experiments/targeted_training/`.
+OpenML runs write to `reports/experiments/openml/`.
 
 The stress suite covers axis-aligned thresholds, XOR interactions, piecewise regression,
 irrelevant high-dimensional noise, rotated features, regime switching, and sparse high-order
@@ -87,13 +90,13 @@ Generate topology figures after a benchmark run:
 
 ```bash
 venv/bin/python scripts/visualize_topology.py \
-  --results-csv reports/benchmark_results.csv \
+  --results-csv reports/experiments/legacy/results.csv \
   --output-dir reports/figures \
   --tasks synthetic_xor,synthetic_piecewise,synthetic_axis_threshold,synthetic_rotated \
   --seeds 42,43,44 \
   --n-samples 1024 \
   --max-epochs 20 \
-  --benchmark-report reports/benchmark_results.md
+  --benchmark-report reports/experiments/legacy/results.md
 ```
 
 Decision-surface figures are limited to true two-feature synthetic task configs.

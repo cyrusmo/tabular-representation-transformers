@@ -25,7 +25,10 @@ def main() -> None:
         default="synthetic",
         choices=["synthetic", "synthetic_stress", "openml"],
     )
-    parser.add_argument("--output", default="reports/benchmark_results.md")
+    parser.add_argument(
+        "--output",
+        default="reports/experiments/legacy/results.md",
+    )
     parser.add_argument("--output-csv", default=None)
     parser.add_argument("--diagnostics-output", default=None)
     parser.add_argument("--n-samples", type=int, default=512)

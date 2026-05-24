@@ -1,6 +1,6 @@
 # TST Diagnostics Summary
 
-Source: `reports/tst_diagnostics.csv`. One row per final epoch for each dataset/seed/model variant run.
+Source: `reports/experiments/legacy/diagnostics.csv`. One row per final epoch for each dataset/seed/model variant run.
 
 ## Status Counts
 

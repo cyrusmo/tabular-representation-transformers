@@ -353,7 +353,7 @@ artifacts, not claims of model superiority.
 
 ```bash
 venv/bin/python scripts/visualize_topology.py \
-  --results-csv reports/benchmark_results.csv \
+  --results-csv reports/experiments/legacy/results.csv \
   --output-dir reports/figures \
   --tasks synthetic_xor,synthetic_piecewise,synthetic_axis_threshold,synthetic_rotated \
   --seeds 42,43,44 \
@@ -399,10 +399,16 @@ def _update_benchmark_links(report_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--results-csv", default="reports/benchmark_results.csv")
+    parser.add_argument(
+        "--results-csv",
+        default="reports/experiments/legacy/results.csv",
+    )
     parser.add_argument("--output-dir", default="reports/figures")
     parser.add_argument("--docs-output", default="docs/tensor_topology.md")
-    parser.add_argument("--benchmark-report", default="reports/benchmark_results.md")
+    parser.add_argument(
+        "--benchmark-report",
+        default="reports/experiments/legacy/results.md",
+    )
     parser.add_argument(
         "--tasks",
         default="synthetic_axis_aligned,synthetic_xor,synthetic_rotated,synthetic_piecewise",
