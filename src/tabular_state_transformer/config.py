@@ -15,13 +15,16 @@ class TabularStateConfig:
     use_fourier: bool = False
     use_wavelet: bool = False
     use_moe: bool = False
+    use_feature_crosses: bool = False
     head_type: str = "simple"
+    pooling: str = "mean"
     task: str = "regression"
     n_classes: int = 2
     dropout: float = 0.1
     gate_l1: float = 0.0
     gate_init: float = -1.0
     gate_lr_multiplier: float = 1.0
+    cross_max_features: int = 16
     learning_rate: float = 1e-3
     batch_size: int = 256
     max_epochs: int = 20

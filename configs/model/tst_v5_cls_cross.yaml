@@ -1,0 +1,16 @@
+n_features: 20
+d_token: 32
+n_heads: 4
+n_layers: 2
+dropout: 0.1
+use_gate: true
+gate_l1: 0.0001
+gate_init: -1.0
+gate_lr_multiplier: 100.0
+use_fourier: false
+use_wavelet: false
+use_moe: false
+use_feature_crosses: true
+cross_max_features: 16
+pooling: cls
+head_type: simple

@@ -3,6 +3,8 @@ from __future__ import annotations
 from tabular_state_transformer.evaluation import run_benchmark
 from tabular_state_transformer.evaluation.benchmark import (
     DEFAULT_BASELINES,
+    DEFAULT_MODEL_LABELS,
+    MODEL_CONFIGS,
     OPENML_BENCHMARK_DATASETS,
     TuningCandidate,
     _datasets_for_suite,
@@ -71,6 +73,16 @@ def test_default_baselines_include_safe_gradient_boosting_not_xgboost():
     assert "xgboost" not in DEFAULT_BASELINES
 
 
+def test_default_model_registry_excludes_experimental_architecture_probe_configs():
+    assert DEFAULT_MODEL_LABELS == [
+        "TST-v0",
+        "TST-v1-Gate",
+        "TST-v2-GateFourier",
+        "TST-v3-MoE",
+    ]
+    assert {"TST-v4-CLS", "TST-v4-Attention", "TST-v5-CLS-Cross"}.issubset(MODEL_CONFIGS)
+
+
 def test_openml_suite_uses_curated_paper_track():
     assert _datasets_for_suite("openml") == OPENML_BENCHMARK_DATASETS
     assert {"adult", "covertype", "higgs-small", "heloc"}.issubset(OPENML_BENCHMARK_DATASETS)
@@ -99,6 +111,28 @@ def test_ft_transformer_style_neural_baseline_is_opt_in(tmp_path):
     assert row["benchmark_mode"] == "default_benchmark"
     assert diagnostics_output.exists()
     assert "effective_training_status" in diagnostics_output.read_text()
+
+
+def test_explicit_architecture_probe_models_are_opt_in(tmp_path):
+    output = tmp_path / "benchmark.md"
+    diagnostics_output = tmp_path / "diagnostics.csv"
+    results = run_benchmark(
+        "synthetic",
+        output_path=output,
+        diagnostics_output_path=diagnostics_output,
+        n_samples=64,
+        max_epochs=1,
+        dataset_names=["synthetic_xor"],
+        baselines=[],
+        model_configs=["TST-v4-CLS", "TST-v5-CLS-Cross"],
+    )
+
+    rows = [result.as_row() for result in results]
+    assert [row["model"] for row in rows] == ["TST-v4-CLS", "TST-v5-CLS-Cross"]
+    assert all(row["artifact_path"] for row in rows)
+    diagnostic_text = diagnostics_output.read_text()
+    assert "TST-v4-CLS" in diagnostic_text
+    assert "TST-v5-CLS-Cross" in diagnostic_text
 
 
 def test_tuned_tst_benchmark_emits_audit_metadata(tmp_path):

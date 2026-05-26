@@ -6,10 +6,12 @@ from pathlib import Path
 import numpy as np
 import torch
 from torch import nn
+from .blocks.feature_cross import FeatureCrossTokenizer
 from .blocks.gate import SparseFeatureGate
 from .blocks.heads import ClassificationHead, RegressionHead
 from .blocks.interaction import InteractionBlock
 from .blocks.moe_head import RegimeGatedHead
+from .blocks.pooling import AttentionPooling
 from .blocks.spectral import FourierFeatureBlock, WaveletFeatureBlock
 from .config import TabularStateConfig
 from .tokenizer import FeatureTokenizer
@@ -17,11 +19,20 @@ from .tokenizer import FeatureTokenizer
 class TabularStateTransformer(nn.Module):
     def __init__(self, config: TabularStateConfig):
         super().__init__()
+        if config.pooling not in {"mean", "cls", "attention"}:
+            raise ValueError(f"Unknown pooling mode '{config.pooling}'.")
         self.config = config
         self.tokenizer = FeatureTokenizer(config.n_features, config.d_token)
         self.gate = SparseFeatureGate(config.n_features, init=config.gate_init) if config.use_gate else nn.Identity()
         self.fourier = FourierFeatureBlock(config.d_token) if config.use_fourier else nn.Identity()
         self.wavelet = WaveletFeatureBlock(config.d_token) if config.use_wavelet else nn.Identity()
+        self.cross_tokenizer = (
+            FeatureCrossTokenizer(config.n_features, config.d_token, config.cross_max_features)
+            if config.use_feature_crosses
+            else None
+        )
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, config.d_token)) if config.pooling == "cls" else None
+        self.attention_pooling = AttentionPooling(config.d_token) if config.pooling == "attention" else None
         self.interaction = InteractionBlock(config.d_token, config.n_heads, config.n_layers, config.dropout)
         output_dim = config.n_classes if config.task == "classification" else 1
         if config.use_moe or config.head_type == "moe":
@@ -31,13 +42,32 @@ class TabularStateTransformer(nn.Module):
         else:
             self.head = RegressionHead(config.d_token)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def _tokens_before_interaction(self, x: torch.Tensor) -> torch.Tensor:
+        x = x.float()
         tokens = self.tokenizer(x.float())
         tokens = self.gate(tokens)
         tokens = self.fourier(tokens)
         tokens = self.wavelet(tokens)
+        if self.cross_tokenizer is not None:
+            tokens = torch.cat([tokens, self.cross_tokenizer(x)], dim=1)
+        if self.cls_token is not None:
+            cls_token = self.cls_token.expand(x.shape[0], -1, -1)
+            tokens = torch.cat([cls_token, tokens], dim=1)
+        return tokens
+
+    def _pool_tokens(self, tokens: torch.Tensor) -> torch.Tensor:
+        if self.config.pooling == "mean":
+            return tokens.mean(dim=1)
+        if self.config.pooling == "cls":
+            return tokens[:, 0]
+        if self.attention_pooling is None:
+            raise ValueError(f"Unknown pooling mode '{self.config.pooling}'.")
+        return self.attention_pooling(tokens)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        tokens = self._tokens_before_interaction(x)
         tokens = self.interaction(tokens)
-        out = self.head(tokens.mean(dim=1))
+        out = self.head(self._pool_tokens(tokens))
         return out if self.config.task == "classification" else out.squeeze(-1)
 
     def gate_regularization_loss(self) -> torch.Tensor:

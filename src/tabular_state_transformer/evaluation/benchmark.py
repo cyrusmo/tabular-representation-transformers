@@ -132,7 +132,17 @@ MODEL_CONFIGS = {
     "TST-v1-Gate": "configs/model/tst_v1_gate.yaml",
     "TST-v2-GateFourier": "configs/model/tst_v2_fourier_gate.yaml",
     "TST-v3-MoE": "configs/model/tst_v3_moe.yaml",
+    "TST-v4-CLS": "configs/model/tst_v4_cls.yaml",
+    "TST-v4-Attention": "configs/model/tst_v4_attention.yaml",
+    "TST-v5-CLS-Cross": "configs/model/tst_v5_cls_cross.yaml",
 }
+
+DEFAULT_MODEL_LABELS = [
+    "TST-v0",
+    "TST-v1-Gate",
+    "TST-v2-GateFourier",
+    "TST-v3-MoE",
+]
 
 NEURAL_BASELINE_CONFIGS = {
     "ft_transformer": {
@@ -616,7 +626,7 @@ def run_benchmark(
     selected_datasets = list(_datasets_for_suite(suite) if dataset_names is None else dataset_names)
     selected_seeds = list([42] if seeds is None else seeds)
     selected_baselines = list(DEFAULT_BASELINES if baselines is None else baselines)
-    selected_models = list(MODEL_CONFIGS if model_configs is None else model_configs)
+    selected_models = list(DEFAULT_MODEL_LABELS if model_configs is None else model_configs)
     selected_neural_baselines = list([] if neural_baselines is None else neural_baselines)
     resolved_tuning_max_epochs = tuning_max_epochs or max_epochs
     results: list[BenchmarkResult] = []

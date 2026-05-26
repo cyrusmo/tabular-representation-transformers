@@ -38,6 +38,12 @@ TST ablations:
 - TST-v2-GateFourier
 - TST-v3-MoE
 
+Post-P1 architecture-probe variants are opt-in only and do not affect default benchmark row counts:
+
+- TST-v4-CLS
+- TST-v4-Attention
+- TST-v5-CLS-Cross
+
 XGBoost is not part of the default run on this Python 3.13 environment because its current wheel can
 segfault in native data handling. It remains available for isolated compatibility checks.
 
@@ -81,6 +87,16 @@ The `effective_training_status` heuristic is deterministic and intentionally sim
 
 Validation checkpointing uses task-aware direction: classification maximizes accuracy and regression
 minimizes RMSE. The returned model restores the best validation checkpoint before benchmark scoring.
+
+## Architecture Probe
+
+The pooling and feature-cross variants are a bounded post-diagnostics probe. The hypothesis is that
+mean pooling can dilute sparse interaction signals and scalar feature tokens can make multiplicative
+interactions hard to surface on XOR/noise tasks. The probe is limited to `synthetic_xor` and
+`synthetic_irrelevant_noise` until a primary-metric gain appears against the refreshed current-best
+TST under the same datasets, seed, sample size, and training budget. Lightweight feature-cross tokens
+use the first `cross_max_features` processed features; this is a controlled synthetic-task probe, not
+a general feature-selection mechanism for real-data claims.
 
 ## Topology Artifacts
 

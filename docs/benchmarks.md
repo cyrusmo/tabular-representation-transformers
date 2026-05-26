@@ -86,6 +86,41 @@ selection metadata for auditability.
 `--neural-baselines ft_transformer` is also opt-in. It runs a dependency-free local
 FT-Transformer-style baseline; it is not a validated reference-paper implementation.
 
+Run the post-P1 architecture probe smoke path:
+
+```bash
+venv/bin/python scripts/run_benchmark.py \
+  --suite synthetic \
+  --datasets synthetic_xor \
+  --seeds 42 \
+  --n-samples 64 \
+  --max-epochs 1 \
+  --baselines mlp,lightgbm \
+  --models TST-v4-CLS,TST-v4-Attention,TST-v5-CLS-Cross \
+  --output outputs/smoke/architecture_probe_smoke.md \
+  --output-csv outputs/smoke/architecture_probe_smoke.csv \
+  --diagnostics-output outputs/smoke/architecture_probe_smoke_diagnostics.csv
+```
+
+Run the targeted architecture probe only after the diagnostics gate is passing:
+
+```bash
+venv/bin/python scripts/run_benchmark.py \
+  --suite synthetic \
+  --datasets synthetic_xor,synthetic_irrelevant_noise \
+  --seeds 42 \
+  --n-samples 512 \
+  --max-epochs 50 \
+  --baselines mlp,lightgbm \
+  --models TST-v1-Gate,TST-v2-GateFourier,TST-v4-CLS,TST-v4-Attention,TST-v5-CLS-Cross \
+  --output reports/architecture_probe_results.md \
+  --output-csv reports/architecture_probe_results.csv \
+  --diagnostics-output reports/architecture_probe_diagnostics.csv
+```
+
+Architecture-probe models are explicit-only labels. They do not change the default TST-v0 through
+TST-v3 benchmark set.
+
 Generate topology figures after a benchmark run:
 
 ```bash
