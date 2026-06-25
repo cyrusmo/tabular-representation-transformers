@@ -98,6 +98,14 @@ TST under the same datasets, seed, sample size, and training budget. Lightweight
 use the first `cross_max_features` processed features; this is a controlled synthetic-task probe, not
 a general feature-selection mechanism for real-data claims.
 
+## Trainability Audit
+
+Before adding more architecture variants, run `scripts/run_trainability_audit.py`. The audit disables
+TST early stopping and dropout, uses a high epoch budget, and checks whether TST can memorize
+no-noise 2-feature XOR before testing the current 20-feature XOR and 100-feature irrelevant-noise
+tasks. If TST cannot reach high training accuracy on 2-feature XOR, prioritize optimizer,
+initialization, loss/logit, and tokenizer-scale debugging over new modules.
+
 ## Topology Artifacts
 
 Tensor topology figures live under `reports/figures/` and are documented in

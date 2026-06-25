@@ -121,6 +121,24 @@ venv/bin/python scripts/run_benchmark.py \
 Architecture-probe models are explicit-only labels. They do not change the default TST-v0 through
 TST-v3 benchmark set.
 
+Run the trainability audit before adding more architecture variants:
+
+```bash
+venv/bin/python scripts/run_trainability_audit.py \
+  --tasks xor_2f,xor_20f,irrelevant_noise_100f \
+  --models mlp,TST-v0,TST-v1-Gate,TST-v4-CLS,TST-v5-CLS-Cross \
+  --seeds 42 \
+  --n-samples 512 \
+  --max-epochs 300 \
+  --output reports/trainability_audit_results.md \
+  --output-csv reports/trainability_audit_results.csv \
+  --diagnostics-output reports/trainability_audit_diagnostics.csv
+```
+
+This audit disables TST early stopping and dropout. It is a trainability check, not a benchmark
+claim: the decision point is whether TST can memorize no-noise 2-feature XOR and whether failure
+begins only after irrelevant features are added.
+
 Generate topology figures after a benchmark run:
 
 ```bash
