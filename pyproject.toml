@@ -12,7 +12,7 @@ benchmark = ["catboost", "datasets", "lightgbm", "openml", "xgboost"]
 benchmarks = ["catboost", "datasets", "lightgbm", "openml", "xgboost"]
 dev = ["jupyter", "mypy", "pytest", "ruff"]
 hub = ["huggingface_hub", "safetensors"]
-viz = ["matplotlib", "seaborn"]
+viz = ["matplotlib", "pillow", "seaborn"]
 viz3d = ["matplotlib", "pillow", "plotly"]
 
 [tool.pytest.ini_options]

@@ -547,6 +547,13 @@ def make_landscape_orbit_gifs(
     tasks: list[str],
     models: list[tuple[str, str]],
 ) -> list[Path]:
+    try:
+        import PIL  # noqa: F401
+    except ImportError as exc:  # pragma: no cover
+        raise ImportError(
+            "Orbit GIF export requires Pillow. Install with: pip install -e '.[viz]'"
+        ) from exc
+
     paths: list[Path] = []
     azimuths = np.linspace(-180.0, 165.0, 24)
     for task in tasks:
@@ -657,8 +664,7 @@ def make_gate_bar_field_3d(
             trained = Trainer(config, max_epochs=max_epochs, batch_size=128).fit(bundle)
             X_val = trained.preprocessor.transform(bundle.X_val).astype("float32")
             gate_values = extract_gate_values(trained.model, X_val)
-            values = np.nan_to_num(_feature_vector(gate_values, n_features), nan=0.0)
-            rows.append((f"{label} seed={seed}", values))
+            rows.append((f"{label} seed={seed}", _feature_vector(gate_values, n_features)))
 
     fig = plt.figure(figsize=(13.0, 7.5))
     ax = fig.add_subplot(projection="3d")
@@ -666,23 +672,35 @@ def make_gate_bar_field_3d(
     xs = np.arange(n_features)
     for row_idx, (name, values) in enumerate(rows):
         heights = np.clip(values, 0.0, 1.0)
-        mask = heights > 0.02
-        if not mask.any():
-            continue
-        if name == "intended sparsity":
-            colors = ["#c0392b"] * int(mask.sum())
-        else:
-            colors = [cmap(h) for h in heights[mask]]
-        ax.bar3d(
-            xs[mask],
-            np.full(int(mask.sum()), row_idx, dtype="float32"),
-            np.zeros(int(mask.sum())),
-            0.7,
-            0.5,
-            heights[mask],
-            color=colors,
-            shade=True,
-        )
+        finite = np.isfinite(heights)
+        active = finite & (heights > 0.02)
+        missing = ~finite
+        if active.any():
+            if name == "intended sparsity":
+                colors = ["#c0392b"] * int(active.sum())
+            else:
+                colors = [cmap(h) for h in heights[active]]
+            ax.bar3d(
+                xs[active],
+                np.full(int(active.sum()), row_idx, dtype="float32"),
+                np.zeros(int(active.sum())),
+                0.7,
+                0.5,
+                heights[active],
+                color=colors,
+                shade=True,
+            )
+        if missing.any():
+            ax.scatter(
+                xs[missing],
+                np.full(int(missing.sum()), row_idx + 0.25, dtype="float32"),
+                np.zeros(int(missing.sum())),
+                c="#7f8c8d",
+                marker="x",
+                s=18,
+                linewidths=1.0,
+                depthshade=False,
+            )
     ax.set_yticks(np.arange(len(rows)) + 0.25)
     ax.set_yticklabels([name for name, _ in rows], fontsize=7)
     ax.set_xticks(xs[:: max(1, n_features // 10)])
@@ -1026,7 +1044,6 @@ def main() -> None:
         paths.append(
             make_decision_landscape_grid_3d(output_dir_3d, meshes, tasks=tasks, models=models)
         )
-        paths += make_landscape_orbit_gifs(output_dir_3d, meshes, tasks=tasks, models=models)
         paths.append(
             make_gate_bar_field_3d(
                 output_dir_3d,
@@ -1036,6 +1053,7 @@ def main() -> None:
                 n_features=args.gate_n_features,
             )
         )
+        paths += make_landscape_orbit_gifs(output_dir_3d, meshes, tasks=tasks, models=models)
         if args.export_html:
             paths += export_landscape_html(output_dir_3d, meshes, tasks=tasks, models=models)
 
