@@ -36,6 +36,15 @@ Superseded runs are kept under `archive/` with a date | smoke label, e.g.
 
 Static topology and decision-surface figures: `figures/` (see `docs/tensor_topology.md`).
 
+3D inductive-bias figures live under `figures/3d/`: the decision-landscape hero grid, per-task
+orbit GIFs, the gate bar field, the bias atlas, exported `.npz` meshes (for the future Neural
+ODE/SDE fork to re-render without re-fitting), and optional plotly HTML. Regenerate with:
+
+```bash
+venv/bin/python scripts/visualize_topology.py --mode 3d-surfaces --output-dir reports/figures
+venv/bin/python scripts/visualize_topology.py --mode bias-atlas --output-dir reports/figures
+```
+
 ## Regenerate
 
 ```bash
