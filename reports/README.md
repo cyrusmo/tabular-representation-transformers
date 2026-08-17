@@ -23,9 +23,13 @@ Smoke runs belong under `outputs/smoke/` (see `docs/benchmarks.md`).
 
 | Document | Path |
 | --- | --- |
+| Research narrative (Path B) | `analysis/research_narrative.md` |
 | TST failure diagnosis | `analysis/tst_failure_diagnosis.md` |
 | Diagnostics rollup | `analysis/diagnostics_summary.md` |
-| Research narrative (local) | `analysis/research_narrative.md` |
+| Trainability audit | `trainability_audit_results.md` (+ `.csv`, diagnostics) |
+
+Each experiment folder also has `summary.md` / `seed_summary.csv` regenerated from its `results.csv`.
+The canonical fair-comparison rollup copy is `tables/benchmark_seed_summary.csv`.
 
 ## Archive
 
@@ -62,7 +66,8 @@ venv/bin/python scripts/run_benchmark.py \
 
 venv/bin/python scripts/summarize_benchmark.py \
   --input reports/experiments/fair_comparison/results.csv \
-  --output-md reports/experiments/fair_comparison/summary.md
+  --output-md reports/experiments/fair_comparison/summary.md \
+  --output-csv reports/experiments/fair_comparison/seed_summary.csv
 
 # Targeted XOR / noise diagnostic
 venv/bin/python scripts/run_benchmark.py \

@@ -69,4 +69,9 @@ Public v1 supports DataFrames with categorical columns via sklearn preprocessing
 
 ## Limitations
 
-This toolkit is experimental. It may underperform boosted trees, can overfit high-frequency expansions, and has not been validated for production use.
+This toolkit is experimental. Under the published synthetic-stress protocol, TST ablations do **not**
+beat strong tree baselines on interaction-heavy or high-dimensional noise tasks (notably XOR). The
+intended contribution is a reproducible ablation/diagnostic harness and an honest negative result
+(`reports/analysis/research_narrative.md`), not a claim of universal SOTA performance. The model may
+overfit high-frequency expansions and has not been validated for production or trading use
+(`docs/finance_disclaimer.md`).

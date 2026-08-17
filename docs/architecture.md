@@ -2,6 +2,10 @@
 
 `TabularStateTransformer` is a modular research architecture for testing whether feature identity, sparse gates, spectral/wavelet expansion, interaction blocks, and regime-gated heads help neural tabular models on non-smooth tasks.
 
+**Path B freeze (2026-08-05):** the default measured ladder is TST-v0…v3. Post-P1 probe variants
+(v4/v5) are opt-in diagnostics only; they failed the XOR/noise research gate and are not part of
+fair-comparison claims (`reports/analysis/research_narrative.md`).
+
 The default model keeps mean pooling over final feature tokens. The post-P1 architecture probe adds
 two opt-in readouts:
 

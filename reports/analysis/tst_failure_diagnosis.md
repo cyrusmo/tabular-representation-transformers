@@ -72,17 +72,21 @@ TST variants fail on **interaction-heavy** and **high-dimensional noise** tasks 
 
 ## Actionable conclusions (priority)
 
-| Priority | Action | Rationale |
+| Priority | Action | Status (2026-08-05) |
 | --- | --- | --- |
-| P0 | Re-run gated benchmarks after gate init + gate LR fix | Without fresh rows, existing v1–v3 results still reflect the old non-sparse gate behavior |
-| P0 | Run `tuned_tst_benchmark` + FT-Transformer baseline | Fair comparison per protocol |
-| P1 | Targeted XOR/noise: longer epochs, LR sweep | Minimum bar: beat MLP (~0.77 XOR) |
-| P1 | OpenML subset beyond `adult` | Real-data evidence |
-| P2 | Persist checkpoints + preprocessor | Reproducibility and post-hoc gate plots |
-| P2 | Consider Path B narrative if fair comparison + targeted training still fail | Harness + negative result is publishable |
+| P0 | Re-run gated benchmarks after gate init + gate LR fix | Done via fair comparison + targeted training |
+| P0 | Run `tuned_tst_benchmark` + FT-Transformer baseline | Done — `reports/experiments/fair_comparison/` |
+| P1 | Targeted XOR/noise: longer epochs, LR sweep | Done — XOR still fails the MLP bar (~0.52 vs ~0.77) |
+| P1 | OpenML subset beyond `adult` | Smoke only (`reports/experiments/openml/`); not paper-grade |
+| P2 | Persist checkpoints + preprocessor | Done for TST benchmark artifacts |
+| P2 | Path B narrative if fair + targeted still fail | **Chosen** — see `reports/analysis/research_narrative.md` |
 
-## Recommended experiments (next commits)
+## Recommended experiments (historical)
 
-1. `gate_l1` sweep: `{1e-4, 1e-3, 1e-2, 1e-1}` × `gate_init` `{0, -1}` on `synthetic_irrelevant_noise`, 50 epochs.
+These were the next commits after the 2026-05-24 diagnosis; they are now complete or superseded by Path B:
+
+1. `gate_l1` sweep / gate optimizer fix validation.
 2. Fair comparison: `synthetic_stress`, seeds 42–44, `max_epochs=20`, `tuned_tst_benchmark`, `ft_transformer`.
-3. Targeted: XOR + irrelevant_noise only, `max_epochs=50`, LR grid, single best TST variant after gate fix.
+3. Targeted: XOR + irrelevant_noise only, `max_epochs=50`, LR grid after gate fix.
+
+Do not stack further modules without a passing trainability audit and a primary-metric gain on XOR.

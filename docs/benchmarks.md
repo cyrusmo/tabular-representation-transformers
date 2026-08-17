@@ -137,7 +137,8 @@ venv/bin/python scripts/run_trainability_audit.py \
 
 This audit disables TST early stopping and dropout. It is a trainability check, not a benchmark
 claim: the decision point is whether TST can memorize no-noise 2-feature XOR and whether failure
-begins only after irrelevant features are added.
+begins only after irrelevant features are added. Recorded Path B interpretation lives in
+`reports/analysis/research_narrative.md` next to the XOR failure.
 
 Generate topology figures after a benchmark run:
 

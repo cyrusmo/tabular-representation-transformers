@@ -29,6 +29,4 @@ catboost_info/
 .mypy_cache/
 .coverage
 htmlcov/
-reports/analysis/research_narrative.md
-
 

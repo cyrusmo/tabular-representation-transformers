@@ -73,6 +73,9 @@ gates are represented as `NaN`.
 
 ## Future visual continuity
 
+These are separate-track / fork ideas. They do not change the Path B conclusion for this repo
+(`reports/analysis/research_narrative.md`).
+
 - Track A bridge: financial-state tensor and graph figures made in the private Track A repo
   should reuse the same camera grammar (`elev=28, azim=-60`), the viridis surface scale, and
   the "bias signature" caption style so cross-track figures read as one research program.

@@ -106,6 +106,20 @@ no-noise 2-feature XOR before testing the current 20-feature XOR and 100-feature
 tasks. If TST cannot reach high training accuracy on 2-feature XOR, prioritize optimizer,
 initialization, loss/logit, and tokenizer-scale debugging over new modules.
 
+Canonical audit artifacts: `reports/trainability_audit_results.md` (plus matching `.csv` /
+diagnostics). The 2026-08-05 audit (seed 42) shows TST can memorize 2-feature and 20-feature
+no-noise XOR and the irrelevant-noise task under a 300-epoch, no-early-stop budget. Interpret that
+next to the still-chance fair/targeted XOR scores in `reports/analysis/research_narrative.md`:
+prioritize training-protocol / generalization diagnostics, not new modules.
+
+## Research status (Path B)
+
+As of 2026-08-05 the project follows **Path B**: the contribution is the ablation/diagnostic harness
+and an honest negative result on the hard synthetic stress suite, not a competitive TST model.
+Default fair-comparison and public claims use the frozen ladder TST-v0…v3 only. Architecture-probe
+variants (v4/v5) failed their research gate and must not be scaled to full suites. See
+`reports/analysis/research_narrative.md`.
+
 ## Topology Artifacts
 
 Tensor topology figures live under `reports/figures/` and are documented in
@@ -114,6 +128,7 @@ configs and are not projections of higher-dimensional tasks.
 
 ## Limitations
 
-These results are first-pass evidence, not final paper-grade claims. Hyperparameter tuning is still
-minimal, OpenML coverage is not yet complete, and public superiority claims should be avoided unless
-future runs consistently support them against strong tree baselines.
+These results are diagnostic evidence for a negative-result narrative, not paper-grade superiority
+claims. Hyperparameter tuning is minimal (LR-only for TST), OpenML coverage is smoke-level
+(`n=512`, one seed), and public claims of competitiveness against strong tree baselines should be
+avoided. Wavelet expansion is implemented but not part of the measured ablation ladder.
